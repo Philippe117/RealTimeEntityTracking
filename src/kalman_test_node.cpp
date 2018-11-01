@@ -20,44 +20,58 @@ void mouseCallback(int event, int x, int y, int flags, void* userdata) {
 
 int main( )
 {
-    PerceivedEntity entity(100.f, 100.f, 0.f);
-    PerceivedEntity mouse(100.f, 100.f, 0.f);
+    vector<PerceivedEntity> entities;
+
+    sara_msgs::Entity mouse;
 
 
 // Image to show mouse tracking
     RNG rng;
     Mat img(600, 800, CV_8UC3);
-    vector<Point> kalmanv;
-    kalmanv.clear();
     namedWindow("mouse kalman", 1);
     setMouseCallback("mouse kalman", mouseCallback, NULL);
 
     while(1)
     {
 
-        entity.update(ros::Duration(0));
-
         // Get mouse point
-        mouse.position.x = mousePos.x;//+rng.gaussian(40.f);
-        mouse.position.y = mousePos.y;//+rng.gaussian(40.f);
+        mouse.position.x = mousePos.x+rng.gaussian(20.f);
+        mouse.position.y = mousePos.y+rng.gaussian(20.f);
 
-        entity.mergeOnto(mouse);
+        for (auto& entity : entities) {
+            entity.update(ros::Duration(0));
+        }
+
+
+
+        PerceivedEntity *closest{nullptr};
+        float closestDistance{180.f};
+        for (auto& entity : entities){
+            float diff{entity.compareWith(mouse)};
+            if (diff < closestDistance){
+                closest = &entity;
+                closestDistance = diff;
+            }
+        }
+        if (closest){
+            closest->mergeOnto(mouse);
+        } else {
+            entities.push_back(PerceivedEntity(mouse.position.x, mouse.position.y, mouse.position.z));
+        }
+
 
         imshow("mouse kalman", img);
         img = Scalar::all(0);
 
 
-        // plot points
-        Point myEntity(entity.position.x, entity.position.y);
-        drawCross( myEntity, Scalar(255,255,255), 5 );
-        kalmanv.push_back(myEntity);
+        for (auto& entity : entities) {
+            Point myEntity(entity.position.x, entity.position.y);
+            drawCross( myEntity, Scalar(255,255,255), 5 );
+        }
 
         Point measPt(mouse.position.x, mouse.position.y);
         drawCross( measPt, Scalar(0,0,255), 5 );
 
-
-        for (int i = 0; i < kalmanv.size()-1; i++)
-            line(img, kalmanv[i], kalmanv[i+1], Scalar(0,155,255), 1);
 
         waitKey(20);
     }

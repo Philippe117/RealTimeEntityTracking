@@ -12,9 +12,11 @@
 /// A child class for the Entity.msg
 /// Contain a kalman filter and some utilities used for multitracking
 class PerceivedEntity : public sara_msgs::Entity {
-    cv::KalmanFilter KF;
+//    cv::KalmanFilter KF;
 
 public:
+    cv::KalmanFilter KF;
+
 
     PerceivedEntity(float x, float y, float z, std::string name="");
     ~PerceivedEntity();
