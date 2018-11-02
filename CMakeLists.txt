@@ -109,7 +109,9 @@ endif()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-
+        CATKIN_DEPENDS
+        sara_msgs
+        roscpp
 )
 
 ###########
@@ -137,7 +139,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/kalman_test_node.cpp src/PerceivedEntity.cpp include/PerceivedEntity.h)
+add_executable(${PROJECT_NAME}_node src/kalman_test_node.cpp src/PerceivedEntity.cpp include/PerceivedEntity.h src/EntityTracker.cpp include/EntityTracker.h)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

@@ -3,46 +3,51 @@
 //
 
 #include "PerceivedEntity.h"
+#include <iostream>
 
 using namespace sara_msgs;
 using namespace cv;
 
-PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): KF(6, 3, 0) {
+PerceivedEntity::PerceivedEntity(const Entity entity): mKF(6, 3, 0) {
+    PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name);  // TODO finir ça
+}
+
+
+
+PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): mKF(6, 3, 0) {
 
     // Initialise the kalman filter.
-    KF.statePre.at<float>(0) = x;
-    KF.statePre.at<float>(1) = y;
-    KF.statePre.at<float>(2) = z;
-    KF.statePre.at<float>(3) = 0;
-    KF.statePre.at<float>(4) = 0;
-    KF.statePre.at<float>(5) = 0;
-    setIdentity(KF.measurementMatrix);
-    setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-4));
-    setIdentity(KF.measurementNoiseCov, cv::Scalar::all(10));
-    setIdentity(KF.errorCovPost, cv::Scalar::all(.1));
+    setIdentity(mKF.measurementMatrix);
+    setIdentity(mKF.processNoiseCov, cv::Scalar::all(1e-4));
+    setIdentity(mKF.measurementNoiseCov, cv::Scalar::all(10));
+    setIdentity(mKF.errorCovPre, cv::Scalar::all(.5));
+    setIdentity(mKF.errorCovPost, cv::Scalar::all(.5));
 
     // Initialise the transition matrix
-    float F{0.98f};
-    KF.transitionMatrix = (cv::Mat_<float>(6, 6) << F,  0,  0,  1,  0,  0,  \
-                                                    0,  F,  0,  0,  1,  0,  \
-                                                    0,  0,  F,  0,  0,  1,  \
-                                                    0,  0,  0,  1,  0,  0,  \
-                                                    0,  0,  0,  0,  1,  0,  \
-                                                    0,  0,  0,  0,  0,  1   );
+    float F{1.f};
+    mKF.transitionMatrix = (cv::Mat_<float>(6, 6) <<1,  0,  0,  1,  0,  0,  \
+                                                    0,  1,  0,  0,  1,  0,  \
+                                                    0,  0,  1,  0,  0,  1,  \
+                                                    0,  0,  0,  F,  0,  0,  \
+                                                    0,  0,  0,  0,  F,  0,  \
+                                                    0,  0,  0,  0,  0,  F   );
 
     // Set the Entitie property
     // TODO do all properties
     this->name = name;
 
-
-    // Initialise the status of the Entity
-    updateStatus();
+    mKF.statePre.at<float>(0) = x;
+    mKF.statePre.at<float>(1) = y;
+    mKF.statePre.at<float>(2) = z;
+    mKF.statePost.at<float>(0) = x;
+    mKF.statePost.at<float>(1) = y;
+    mKF.statePost.at<float>(2) = z;
 }
 
 PerceivedEntity::~PerceivedEntity() {
 }
 
-float PerceivedEntity::compareWith(Entity &en) const{
+float PerceivedEntity::compareWith(const PerceivedEntity &en) const{
 
     // Obtain the distance on each axis.
     float dX{float(position.x-en.position.x)};
@@ -69,25 +74,25 @@ void PerceivedEntity::mergeOnto(Entity &source){
     measurement(1) = source.position.y;
     measurement(2) = source.position.z;
     // TODO éssayer avec d'autres propriétées ex: hauteur, couleur, etc.
-    KF.correct(measurement);
+    mKF.correct(measurement);
 
     // Update the position
     updateStatus();
 }
 
-void PerceivedEntity::update(ros::Duration deltaTime){
+void PerceivedEntity::update(const ros::Duration deltaTime){
     // Predict the next position.
-    KF.predict();
+    mKF.predict();
     // Update the Entity
     updateStatus();
 }
 
 void PerceivedEntity::updateStatus(){
     // Transfert the position from the state matrix to the Entity
-    position.x = KF.statePost.at<double>(0);
-    position.y = KF.statePost.at<double>(1);
-    position.z = KF.statePost.at<double>(2);
-    velocity.x = KF.statePost.at<double>(3);
-    velocity.y = KF.statePost.at<double>(4);
-    velocity.z = KF.statePost.at<double>(5);
+    position.x = mKF.statePost.at<float>(0);
+    position.y = mKF.statePost.at<float>(1);
+    position.z = mKF.statePost.at<float>(2);
+    velocity.x = mKF.statePost.at<float>(3);
+    velocity.y = mKF.statePost.at<float>(4);
+    velocity.z = mKF.statePost.at<float>(5);
 }
