@@ -9,14 +9,36 @@ line( img, Point( center.x + d, center.y - d ), Point( center.x - d, center.y + 
 
 using namespace std;
 using namespace cv;
+using namespace sara_msgs;
 
 EntityTracker::~EntityTracker() {
     mEntities.clear();
 }
 
 void EntityTracker::update(ros::Duration deltaTime) {
+
+    // Create a list of entities to delete.
+    vector<int> toDelete;
+    int i{0};
     for (auto &entity : mEntities){
+        if (entity.lastUpdateTime < ros::Time::now()-ros::Duration(5)){
+            toDelete.push_back(i);
+        }
+        ++i;
+    }
+
+    // Delete all marked entities.
+    for (auto &del : toDelete){
+        mEntities.erase(mEntities.begin()+del);
+    }
+
+    // Update all entities.
+    for (auto &entity : mEntities){
+        if (entity.lastUpdateTime < ros::Time::now()-ros::Duration(5)){
+            toDelete.push_back(i);
+        }
         entity.update(deltaTime);
+        ++i;
     }
 }
 
@@ -28,42 +50,52 @@ void EntityTracker::publishOnTopic() {
 
 }
 
-bool EntityTracker::perceiveEntity(PerceivedEntity perceivedEntity){
-    vector<PerceivedEntity> entities;
-    entities.push_back(perceivedEntity);
+bool EntityTracker::perceiveEntity(Entity entity){
+    vector<Entity> entities;
+    entities.push_back(entity);
     return perceiveEntities(entities);
 }
 
-bool EntityTracker::perceiveEntities(std::vector<PerceivedEntity> perceivedEntities){
+bool EntityTracker::perceiveEntities(std::vector<Entity> entities){
 
     // Over complicated and sluggish way to match detections and entities together.
-    for (auto &perceived : perceivedEntities){
+    for (auto &perceived : entities){
 
         // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
-        // The inside loop will stop as soon as it sees a better match.
-        float minDiff{100.f};
+        // The inside loop will stop if there is already a better match.
+        float minDiff{32000.f};
         PerceivedEntity *closest{nullptr};
         for (auto &entity : mEntities){
-            auto diff{perceived.compareWith(entity)};
+            auto diff{entity.compareWith(perceived)};
             if (diff < minDiff){
-                bool ok{true};
-                for (auto &perceived2 : perceivedEntities){
+                float minDiff2{diff};
+                Entity *closest2{nullptr};
+                for (auto &perceived2 : entities){
                     auto diff2{entity.compareWith(perceived2)};
-                    if (diff2 < diff){
-                        ok = false;
-                        break;
+                    if (diff2 < minDiff2){
+                        closest2 = &perceived;
+                        minDiff2 = diff2;
                     }
                 }
-                if (ok){
+                if (closest2 != &perceived){
                     minDiff = diff;
                     closest = &entity;
                 }
             }
         }
         if (closest){
+//            ros::Time now();
+            closest->lastUpdateTime = ros::Time::now();
             closest->mergeOnto(perceived);
         } else {
-            mEntities.push_back(PerceivedEntity(perceived));
+            PerceivedEntity newEntity(// TODO: should not always result in creation. (maybe timer based)
+                    perceived.position.x,
+                    perceived.position.y,
+                    perceived.position.z,
+                    perceived.name);
+            newEntity.lastUpdateTime = ros::Time::now();
+
+            mEntities.push_back(newEntity);
         }
     }
 
@@ -76,4 +108,5 @@ void EntityTracker::opencvDraw(Mat img){
         Point myEntity(entity.position.x, entity.position.y);
         drawCross( myEntity, Scalar(255,255,255), 5 );
     }
+    putText(img, "test = " + to_string(mEntities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
 }

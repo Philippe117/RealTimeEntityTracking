@@ -7,10 +7,11 @@
 
 #include "sara_msgs/Entity.h"
 #include "opencv2/video/tracking.hpp"
+#include <iostream>
 
 
 /// A child class for the Entity.msg
-/// Contain a kalman filter and some utilities used for multitracking
+/// Contain a kalman filter and some utilities used for multitracking and stuff.
 class PerceivedEntity : public sara_msgs::Entity {
     cv::KalmanFilter mKF;
 
@@ -18,11 +19,12 @@ public:
 
     // Constructors and destructor.
     PerceivedEntity(float x, float y, float z, std::string name="");
-    PerceivedEntity(const sara_msgs::Entity entity);
+    PerceivedEntity(sara_msgs::Entity &entity) :
+            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name){std::cout << "ttt\n";}
     ~PerceivedEntity();
 
     // Allow to obtain the weighted difference between two entities
-    float compareWith(const PerceivedEntity &en) const;
+    float compareWith(const sara_msgs::Entity &en) const;
 
     // Merge an PerceivedEntity onto this one
     void mergeOnto(sara_msgs::Entity &source);

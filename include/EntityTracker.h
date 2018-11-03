@@ -19,8 +19,8 @@ public:
     void update(ros::Duration deltaTime);
 
     // Suggest the addition of a new entity to the list.
-    bool perceiveEntities(std::vector<PerceivedEntity> perceivedEntities);
-    bool perceiveEntity(PerceivedEntity perceivedEntity); // Same but for a single entity.
+    bool perceiveEntities(std::vector<sara_msgs::Entity> entities);
+    bool perceiveEntity(sara_msgs::Entity entity); // Same but for a single entity.
 
     // Publish the list of entities on a ros topic;
     void publishOnTopic();

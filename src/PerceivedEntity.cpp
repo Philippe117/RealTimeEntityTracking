@@ -3,22 +3,16 @@
 //
 
 #include "PerceivedEntity.h"
-#include <iostream>
 
 using namespace sara_msgs;
 using namespace cv;
 
-PerceivedEntity::PerceivedEntity(const Entity entity): mKF(6, 3, 0) {
-    PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name);  // TODO finir ça
-}
-
-
 
 PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): mKF(6, 3, 0) {
-
+    std::cout << "build\n";
     // Initialise the kalman filter.
     setIdentity(mKF.measurementMatrix);
-    setIdentity(mKF.processNoiseCov, cv::Scalar::all(1e-4));
+    setIdentity(mKF.processNoiseCov, cv::Scalar::all(1e-5));
     setIdentity(mKF.measurementNoiseCov, cv::Scalar::all(10));
     setIdentity(mKF.errorCovPre, cv::Scalar::all(.5));
     setIdentity(mKF.errorCovPost, cv::Scalar::all(.5));
@@ -47,7 +41,7 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): m
 PerceivedEntity::~PerceivedEntity() {
 }
 
-float PerceivedEntity::compareWith(const PerceivedEntity &en) const{
+float PerceivedEntity::compareWith(const Entity &en) const{
 
     // Obtain the distance on each axis.
     float dX{float(position.x-en.position.x)};
@@ -83,7 +77,7 @@ void PerceivedEntity::mergeOnto(Entity &source){
 void PerceivedEntity::update(const ros::Duration deltaTime){
     // Predict the next position.
     mKF.predict();
-    // Update the Entity
+    // Update the Entities
     updateStatus();
 }
 
