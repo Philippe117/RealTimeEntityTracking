@@ -18,7 +18,7 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): m
     setIdentity(mKF.errorCovPost, cv::Scalar::all(.5));
 
     // Initialise the transition matrix
-    float F{1.f};
+    float F{0.99f};
     mKF.transitionMatrix = (cv::Mat_<float>(6, 6) <<1,  0,  0,  1,  0,  0,  \
                                                     0,  1,  0,  0,  1,  0,  \
                                                     0,  0,  1,  0,  0,  1,  \

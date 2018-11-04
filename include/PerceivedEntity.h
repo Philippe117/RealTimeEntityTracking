@@ -2,8 +2,8 @@
 // Created by philippe on 31/10/18.
 //
 
-#ifndef KALMAN_TEST_PERCEIVEDENTITY_H
-#define KALMAN_TEST_PERCEIVEDENTITY_H
+#ifndef WM_ENTITY_TRACKER_PERCEIVEDENTITY_H
+#define WM_ENTITY_TRACKER_PERCEIVEDENTITY_H
 
 #include "sara_msgs/Entity.h"
 #include "opencv2/video/tracking.hpp"
@@ -38,4 +38,4 @@ public:
 };
 
 
-#endif //KALMAN_TEST_PERCEIVEDENTITY_H
+#endif //WM_ENTITY_TRACKER_PERCEIVEDENTITY_H

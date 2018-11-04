@@ -2,8 +2,8 @@
 // Created by philippe on 01/11/18.
 //
 
-#ifndef KALMAN_TEST_ENTITYTRACKER_H
-#define KALMAN_TEST_ENTITYTRACKER_H
+#ifndef WM_ENTITY_TRACKER_ENTITYTRACKER_H
+#define WM_ENTITY_TRACKER_ENTITYTRACKER_H
 
 #include <vector>
 #include "PerceivedEntity.h"
@@ -45,4 +45,4 @@ public:
     ros::Duration setDeleteDelay(ros::Duration value);
 };
 
-#endif //KALMAN_TEST_ENTITYTRACKER_H
+#endif //WM_ENTITY_TRACKER_ENTITYTRACKER_H

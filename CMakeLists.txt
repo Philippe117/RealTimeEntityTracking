@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(kalman_test)
+project(wm_entity_tracker)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -128,7 +128,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/kalman_test.cpp
+#   src/${PROJECT_NAME}/wm_entity_tracker.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -139,7 +139,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/kalman_test_node.cpp src/PerceivedEntity.cpp include/PerceivedEntity.h src/EntityTracker.cpp include/EntityTracker.h)
+add_executable(${PROJECT_NAME}_node src/wm_entity_tracker_node.cpp src/PerceivedEntity.cpp include/PerceivedEntity.h src/EntityTracker.cpp include/EntityTracker.h)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -199,7 +199,7 @@ target_link_libraries(${PROJECT_NAME}_node ${OpenCV_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_kalman_test.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_wm_entity_tracker.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
