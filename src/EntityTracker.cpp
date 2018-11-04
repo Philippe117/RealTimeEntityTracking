@@ -12,7 +12,8 @@ using namespace cv;
 using namespace sara_msgs;
 
 EntityTracker::EntityTracker(ros::Duration deleteDelay) :
-        mDeleteDelay{deleteDelay}{}
+        mDeleteDelay{deleteDelay},
+        mNextID{0}{}
 
 EntityTracker::~EntityTracker() {
     mEntities.clear();
@@ -96,14 +97,10 @@ bool EntityTracker::perceiveEntities(std::vector<Entity> entities){
         } else {
             // If not, we create the new entity and add it to the list.
             // TODO: Maybe should not always result in creation. (maybe timer based IDK)
-            PerceivedEntity newEntity(
-                    perceived.position.x,
-                    perceived.position.y,
-                    perceived.position.z,
-                    perceived.name);
-            newEntity.lastUpdateTime = ros::Time::now();
-
-            mEntities.push_back(newEntity);
+            addEntity(perceived.position.x,
+                      perceived.position.y,
+                      perceived.position.z,
+                      perceived.name);
         }
     }
 
@@ -115,6 +112,7 @@ void EntityTracker::opencvDraw(Mat img) const{
     for (auto& entity : mEntities) {
         Point myEntity(entity.position.x, entity.position.y);
         drawCross( myEntity, Scalar(255,255,255), 5 );
+        putText(img, to_string(entity.ID), Point(entity.position.x, entity.position.y), FONT_HERSHEY_COMPLEX, 1, 255);
     }
     putText(img, "entities = " + to_string(mEntities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
 }
@@ -127,4 +125,27 @@ ros::Duration EntityTracker::deleteDelay() const{
 ros::Duration EntityTracker::setDeleteDelay(ros::Duration value){
     mDeleteDelay = value;
     return mDeleteDelay;
+}
+
+void EntityTracker::addEntity(float x, float y, float z, std::string name, int ID){
+    PerceivedEntity newEntity(x, y, z, name);
+    newEntity.lastUpdateTime = ros::Time::now();
+
+    // If the ID is specified, we try to find the matching ID in the list.
+    // Otherwise, we create a new entity.
+    if (ID == -1){
+        newEntity.ID = mNextID++;
+        mEntities.push_back(newEntity);
+        return;
+    } else {
+        for (auto &entity : mEntities){
+            if (entity.ID == ID){
+                entity.mergeOnto(newEntity);
+                entity.lastUpdateTime = ros::Time::now();
+                return;
+            }
+        }
+        // If there is no match, we add it to the list.
+        mEntities.push_back(newEntity);
+    }
 }

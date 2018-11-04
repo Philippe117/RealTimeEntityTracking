@@ -12,9 +12,14 @@
 class EntityTracker {
     std::vector<PerceivedEntity> mEntities;
     ros::Duration mDeleteDelay;
+    int mNextID;
 
     // Check all old entities and delete them.
     void deleteOld();
+
+    // Add an entity to the list and assing a procedural ID. If the ID is specified, do we merge instead.
+    void addEntity(float x, float y, float z, std::string name, int ID = -1);
+
 public:
     EntityTracker(ros::Duration deleteDelay=ros::Duration(5.f));
     ~EntityTracker();
