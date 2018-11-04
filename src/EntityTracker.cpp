@@ -11,17 +11,30 @@ using namespace std;
 using namespace cv;
 using namespace sara_msgs;
 
+EntityTracker::EntityTracker(ros::Duration deleteDelay) :
+        mDeleteDelay{deleteDelay}{}
+
 EntityTracker::~EntityTracker() {
     mEntities.clear();
 }
 
 void EntityTracker::update(ros::Duration deltaTime) {
 
+    // Delete all old entities.
+    deleteOld();
+
+    // Update all entities.
+    for (auto &entity : mEntities){
+        entity.update(deltaTime);
+    }
+}
+
+void EntityTracker::deleteOld(){
     // Create a list of entities to delete.
     vector<int> toDelete;
     int i{0};
     for (auto &entity : mEntities){
-        if (entity.lastUpdateTime < ros::Time::now()-ros::Duration(5)){
+        if (entity.lastUpdateTime < ros::Time::now()-deleteDelay()){
             toDelete.push_back(i);
         }
         ++i;
@@ -31,26 +44,19 @@ void EntityTracker::update(ros::Duration deltaTime) {
     for (auto &del : toDelete){
         mEntities.erase(mEntities.begin()+del);
     }
-
-    // Update all entities.
-    for (auto &entity : mEntities){
-        if (entity.lastUpdateTime < ros::Time::now()-ros::Duration(5)){
-            toDelete.push_back(i);
-        }
-        entity.update(deltaTime);
-        ++i;
-    }
 }
 
-void EntityTracker::publishMarkers() {
-
+void EntityTracker::publishMarkers() const {
+    // TODO
 }
 
-void EntityTracker::publishOnTopic() {
-
+void EntityTracker::publishOnTopic() const {
+    // TODO
 }
 
 bool EntityTracker::perceiveEntity(Entity entity){
+
+    // Create a list of entities to call perceiveEntities.
     vector<Entity> entities;
     entities.push_back(entity);
     return perceiveEntities(entities);
@@ -84,11 +90,13 @@ bool EntityTracker::perceiveEntities(std::vector<Entity> entities){
             }
         }
         if (closest){
-//            ros::Time now();
+            // If the match is found, we update the entity.
             closest->lastUpdateTime = ros::Time::now();
             closest->mergeOnto(perceived);
         } else {
-            PerceivedEntity newEntity(// TODO: should not always result in creation. (maybe timer based)
+            // If not, we create the new entity and add it to the list.
+            // TODO: Maybe should not always result in creation. (maybe timer based IDK)
+            PerceivedEntity newEntity(
                     perceived.position.x,
                     perceived.position.y,
                     perceived.position.z,
@@ -103,10 +111,20 @@ bool EntityTracker::perceiveEntities(std::vector<Entity> entities){
 }
 
 
-void EntityTracker::opencvDraw(Mat img){
+void EntityTracker::opencvDraw(Mat img) const{
     for (auto& entity : mEntities) {
         Point myEntity(entity.position.x, entity.position.y);
         drawCross( myEntity, Scalar(255,255,255), 5 );
     }
-    putText(img, "test = " + to_string(mEntities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
+    putText(img, "entities = " + to_string(mEntities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
+}
+
+
+ros::Duration EntityTracker::deleteDelay() const{
+    return mDeleteDelay;
+}
+
+ros::Duration EntityTracker::setDeleteDelay(ros::Duration value){
+    mDeleteDelay = value;
+    return mDeleteDelay;
 }

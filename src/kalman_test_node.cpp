@@ -85,8 +85,9 @@ int main( )
             drawCross( measPt, Scalar(0,0,255), 5 );
         }
 
+        putText(img, "detections = " + to_string(input.size()), Point(20, 40), FONT_HERSHEY_COMPLEX, 1, 255);
 
-        waitKey(20);
+        waitKey(10);
     }
 
     return 0;

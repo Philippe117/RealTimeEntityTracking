@@ -11,8 +11,12 @@
 
 class EntityTracker {
     std::vector<PerceivedEntity> mEntities;
+    ros::Duration mDeleteDelay;
+
+    // Check all old entities and delete them.
+    void deleteOld();
 public:
-    EntityTracker() = default;
+    EntityTracker(ros::Duration deleteDelay=ros::Duration(5.f));
     ~EntityTracker();
 
     // Update the status of all tracked entities.
@@ -23,13 +27,17 @@ public:
     bool perceiveEntity(sara_msgs::Entity entity); // Same but for a single entity.
 
     // Publish the list of entities on a ros topic;
-    void publishOnTopic();
+    void publishOnTopic() const;
 
     // Publish the list of entities as markers for rviz;
-    void publishMarkers();
+    void publishMarkers() const;
 
     // Draw on an opencv screen for test purpose.
-    void opencvDraw(cv::Mat img);
+    void opencvDraw(cv::Mat img) const;
+
+    // Accessors for deleteDelayé
+    ros::Duration deleteDelay() const;
+    ros::Duration setDeleteDelay(ros::Duration value);
 };
 
 #endif //KALMAN_TEST_ENTITYTRACKER_H
