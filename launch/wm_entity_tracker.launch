@@ -1,0 +1,6 @@
+<launch>
+    <rosparam file="$(find wm_data_collector)/config/data_collector_params.yaml" command="load" />
+    <rosparam file="$(find sara_launch)/sh_files/ressources/categoryToNames.yaml" command="load" />
+
+	<node  name="wm_data_collector"	pkg="wm_data_collector"	type="wm_data_collector" output="screen"/>
+</launch>
