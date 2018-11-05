@@ -17,8 +17,8 @@ class EntityTracker {
     // Check all old entities and delete them.
     void deleteOld();
 
-    // Add an entity to the list and assing a procedural ID. If the ID is specified, do we merge instead.
-    void addEntity(float x, float y, float z, std::string name, int ID = -1);
+    // Add an entity to the list and assing a procedural ID.
+    void addEntity(sara_msgs::Entity &entity);
 
 public:
     EntityTracker(ros::Duration deleteDelay=ros::Duration(5.f));
@@ -28,8 +28,8 @@ public:
     void update(ros::Duration deltaTime);
 
     // Suggest the addition of a new entity to the list.
-    bool perceiveEntities(std::vector<sara_msgs::Entity> entities);
-    bool perceiveEntity(sara_msgs::Entity entity); // Same but for a single entity.
+    void perceiveEntities(std::vector<sara_msgs::Entity> entities);
+    void perceiveEntity(sara_msgs::Entity entity); // Same but for a single entity.
 
     // Publish the list of entities on a ros topic;
     void publishOnTopic() const;

@@ -13,7 +13,7 @@ using namespace sara_msgs;
 
 EntityTracker::EntityTracker(ros::Duration deleteDelay) :
         mDeleteDelay{deleteDelay},
-        mNextID{0}{}
+        mNextID{1}{}
 
 EntityTracker::~EntityTracker() {
     mEntities.clear();
@@ -55,7 +55,7 @@ void EntityTracker::publishOnTopic() const {
     // TODO
 }
 
-bool EntityTracker::perceiveEntity(Entity entity){
+void EntityTracker::perceiveEntity(Entity entity){
 
     // Create a list of entities to call perceiveEntities.
     vector<Entity> entities;
@@ -63,48 +63,59 @@ bool EntityTracker::perceiveEntity(Entity entity){
     return perceiveEntities(entities);
 }
 
-bool EntityTracker::perceiveEntities(std::vector<Entity> entities){
+void EntityTracker::perceiveEntities(std::vector<Entity> entities){
 
-    // Over complicated and sluggish way to match detections and entities together.
     for (auto &perceived : entities){
 
-        // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
-        // The inside loop will stop if there is already a better match.
-        float minDiff{32000.f};
-        PerceivedEntity *closest{nullptr};
-        for (auto &entity : mEntities){
-            auto diff{entity.compareWith(perceived)};
-            if (diff < minDiff){
-                float minDiff2{diff};
-                Entity *closest2{nullptr};
-                for (auto &perceived2 : entities){
-                    auto diff2{entity.compareWith(perceived2)};
-                    if (diff2 < minDiff2){
-                        closest2 = &perceived;
-                        minDiff2 = diff2;
-                    }
-                }
-                if (closest2 != &perceived){
-                    minDiff = diff;
-                    closest = &entity;
+        // Initialise the flag that tells if a match has been found.
+        bool notFoundYet{true};
+
+        // If the ID is defined, we try to update the corresponting entity.
+        if (perceived.ID != 0) {
+            for (auto &entity : mEntities) {
+                if (entity.ID == perceived.ID) {
+                    notFoundYet = false;
+                    entity.mergeOnto(perceived);
+                    break;
                 }
             }
-        }
-        if (closest){
-            // If the match is found, we update the entity.
-            closest->lastUpdateTime = ros::Time::now();
-            closest->mergeOnto(perceived);
+            if (notFoundYet) {
+                addEntity(perceived);
+            }
         } else {
-            // If not, we create the new entity and add it to the list.
-            // TODO: Maybe should not always result in creation. (maybe timer based IDK)
-            addEntity(perceived.position.x,
-                      perceived.position.y,
-                      perceived.position.z,
-                      perceived.name);
+
+            // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
+            // The inside loop will stop if there is already a better match.
+            float minDiff{32000.f};
+            PerceivedEntity *closest{nullptr};
+            for (auto &entity : mEntities) {
+                auto diff{entity.compareWith(perceived)};
+                if (diff < minDiff) {
+                    float minDiff2{diff};
+                    Entity *closest2{nullptr};
+                    for (auto &perceived2 : entities) {
+                        auto diff2{entity.compareWith(perceived2)};
+                        if (diff2 < minDiff2) {
+                            closest2 = &perceived;
+                            minDiff2 = diff2;
+                        }
+                    }
+                    if (closest2 != &perceived) {
+                        minDiff = diff;
+                        closest = &entity;
+                    }
+                }
+            }
+            if (closest) {
+                // If the match is found, we update the entity.
+                closest->mergeOnto(perceived);
+            } else {
+                // If not, we create the new entity and add it to the list.
+                // TODO: Maybe should not always result in creation. (maybe timer based IDK)
+                addEntity(perceived);
+            }
         }
     }
-
-    return true;
 }
 
 
@@ -127,25 +138,12 @@ ros::Duration EntityTracker::setDeleteDelay(ros::Duration value){
     return mDeleteDelay;
 }
 
-void EntityTracker::addEntity(float x, float y, float z, std::string name, int ID){
-    PerceivedEntity newEntity(x, y, z, name);
-    newEntity.lastUpdateTime = ros::Time::now();
+void EntityTracker::addEntity(Entity &newEntity){
+    PerceivedEntity entity{PerceivedEntity(newEntity)};
 
-    // If the ID is specified, we try to find the matching ID in the list.
-    // Otherwise, we create a new entity.
-    if (ID == -1){
-        newEntity.ID = mNextID++;
-        mEntities.push_back(newEntity);
-        return;
-    } else {
-        for (auto &entity : mEntities){
-            if (entity.ID == ID){
-                entity.mergeOnto(newEntity);
-                entity.lastUpdateTime = ros::Time::now();
-                return;
-            }
-        }
-        // If there is no match, we add it to the list.
-        mEntities.push_back(newEntity);
-    }
+    // Initialise the ID if needed.
+    if (entity.ID == 0) entity.ID = mNextID++;
+
+    mEntities.push_back(entity);
+    return;
 }

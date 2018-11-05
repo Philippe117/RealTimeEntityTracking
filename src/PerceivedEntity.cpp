@@ -36,6 +36,8 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): m
     mKF.statePost.at<float>(0) = x;
     mKF.statePost.at<float>(1) = y;
     mKF.statePost.at<float>(2) = z;
+
+    lastUpdateTime = ros::Time::now();
 }
 
 PerceivedEntity::~PerceivedEntity() {
@@ -62,6 +64,9 @@ float PerceivedEntity::compareWith(const Entity &en) const{
 
 void PerceivedEntity::mergeOnto(Entity &source){
 
+    // Update the filter.
+    mKF.predict();
+
     // Apply the kalman filter to the position
     Mat_<float> measurement(3,1); measurement.setTo(cv::Scalar(0));
     measurement(0) = source.position.x;
@@ -69,6 +74,8 @@ void PerceivedEntity::mergeOnto(Entity &source){
     measurement(2) = source.position.z;
     // TODO éssayer avec d'autres propriétées ex: hauteur, couleur, etc.
     mKF.correct(measurement);
+
+    lastUpdateTime = ros::Time::now();
 
     // Update the position
     updateStatus();

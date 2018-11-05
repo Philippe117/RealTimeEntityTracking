@@ -29,8 +29,6 @@ int main( )
     EntityTracker tracker;
     vector<Entity> input;
 
-    Entity en;
-
 
     // Image to show mouse tracking
     RNG rng;
@@ -38,12 +36,19 @@ int main( )
     namedWindow("mouse kalman", 1);
 //    setMouseCallback("mouse kalman", mouseCallback, NULL);
 
-    int nb{10};
+    int nb{1000};
     while(1)
     {
+        Entity en;
+        en.position.x = 300;
+        en.position.y = 300;
+
+        if (nb == 400) input.push_back(en);
+        if (nb == 800) input.push_back(en);
         if (--nb == 0){
+            en.ID = 2;
             input.push_back(en);
-            nb = 400;
+            nb = 1200;
         }
 
 
