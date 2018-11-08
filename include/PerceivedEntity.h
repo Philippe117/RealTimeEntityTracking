@@ -8,6 +8,7 @@
 #include "sara_msgs/Entity.h"
 #include "opencv2/video/tracking.hpp"
 #include <iostream>
+#include <ros/ros.h>
 
 
 /// A child class for the Entity.msg
@@ -20,7 +21,7 @@ public:
     // Constructors and destructor.
     PerceivedEntity(float x, float y, float z, std::string name="");
     PerceivedEntity(sara_msgs::Entity &entity) :
-            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name){std::cout << "ttt\n";}
+            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name){}
     ~PerceivedEntity();
 
     // Allow to obtain the weighted difference between two entities

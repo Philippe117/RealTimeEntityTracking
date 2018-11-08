@@ -8,11 +8,14 @@
 #include <vector>
 #include "PerceivedEntity.h"
 #include "opencv2/highgui/highgui.hpp"
+#include <ros/ros.h>
+#include "EntityOutput.h"
 
 class EntityTracker {
     std::vector<PerceivedEntity> mEntities;
     ros::Duration mDeleteDelay;
     int mNextID;
+    std::vector<EntityOutput*> entitiesOutput;
 
     // Check all old entities and delete them.
     void deleteOld();
@@ -30,12 +33,6 @@ public:
     // Suggest the addition of a new entity to the list.
     void perceiveEntities(std::vector<sara_msgs::Entity> entities);
     void perceiveEntity(sara_msgs::Entity entity); // Same but for a single entity.
-
-    // Publish the list of entities on a ros topic;
-    void publishOnTopic() const;
-
-    // Publish the list of entities as markers for rviz;
-    void publishMarkers() const;
 
     // Draw on an opencv screen for test purpose.
     void opencvDraw(cv::Mat img) const;

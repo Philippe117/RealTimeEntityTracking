@@ -9,7 +9,7 @@ using namespace cv;
 
 
 PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): mKF(6, 3, 0) {
-    std::cout << "build\n";
+
     // Initialise the kalman filter.
     setIdentity(mKF.measurementMatrix);
     setIdentity(mKF.processNoiseCov, cv::Scalar::all(1e-5));

@@ -47,14 +47,6 @@ void EntityTracker::deleteOld(){
     }
 }
 
-void EntityTracker::publishMarkers() const {
-    // TODO
-}
-
-void EntityTracker::publishOnTopic() const {
-    // TODO
-}
-
 void EntityTracker::perceiveEntity(Entity entity){
 
     // Create a list of entities to call perceiveEntities.
@@ -64,7 +56,7 @@ void EntityTracker::perceiveEntity(Entity entity){
 }
 
 void EntityTracker::perceiveEntities(std::vector<Entity> entities){
-
+    cout << "perceiving\n";
     for (auto &perceived : entities){
 
         // Initialise the flag that tells if a match has been found.
