@@ -3,12 +3,7 @@
 //
 #include "EntityTracker.h"
 
-#define drawCross( center, color, d ) \
-line( img, Point( center.x - d, center.y - d ), Point( center.x + d, center.y + d ), color, 2, CV_AA, 0); \
-line( img, Point( center.x + d, center.y - d ), Point( center.x - d, center.y + d ), color, 2, CV_AA, 0 )
-
 using namespace std;
-using namespace cv;
 using namespace sara_msgs;
 
 EntityTracker::EntityTracker(ros::Duration deleteDelay) :
@@ -27,6 +22,16 @@ void EntityTracker::update(ros::Duration deltaTime) {
     // Update all entities.
     for (auto &entity : mEntities){
         entity.update(deltaTime);
+    }
+
+    vector<Entity> entities;
+    for (auto &entity : mEntities){
+        entities.push_back(Entity(entity));
+    }
+
+    // Write into all outputs
+    for (auto output : mEntitiesOutput){
+        output->write(entities);
     }
 }
 
@@ -111,16 +116,6 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities){
 }
 
 
-void EntityTracker::opencvDraw(Mat img) const{
-    for (auto& entity : mEntities) {
-        Point myEntity(entity.position.x, entity.position.y);
-        drawCross( myEntity, Scalar(255,255,255), 5 );
-        putText(img, to_string(entity.ID), Point(entity.position.x, entity.position.y), FONT_HERSHEY_COMPLEX, 1, 255);
-    }
-    putText(img, "entities = " + to_string(mEntities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
-}
-
-
 ros::Duration EntityTracker::deleteDelay() const{
     return mDeleteDelay;
 }
@@ -138,4 +133,12 @@ void EntityTracker::addEntity(Entity &newEntity){
 
     mEntities.push_back(entity);
     return;
+}
+
+void EntityTracker::addOutput(EntityOutput &output) {
+    mEntitiesOutput.push_back(&output);
+}
+
+void EntityTracker::clearOutputs() {
+    mEntitiesOutput.clear();
 }

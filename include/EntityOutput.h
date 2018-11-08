@@ -9,8 +9,9 @@
 #include "sara_msgs/Entity.h"
 
 class EntityOutput {
-    EntityOutput();
-    virtual ~EntityOutput()= 0;
+public:
+    EntityOutput() = default;
+    virtual ~EntityOutput()= default;
     virtual void write(const std::vector<sara_msgs::Entity>& entities)= 0;
 };
 

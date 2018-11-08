@@ -22,14 +22,14 @@ SimulatedInput::~SimulatedInput() {
 }
 
 void *SimulatedInput::run() {
-    ros::Rate rate(1);
+    ros::Rate rate(10);
     RNG rng;
 
     vector<Entity> input;
 
     int nb{200};
     while (ros::ok()){
-        if (nb++ > 8) {
+        if (nb++ > 30) {
             nb = 0;
             Entity en;
             en.position.x = 300;
@@ -40,8 +40,8 @@ void *SimulatedInput::run() {
 
         // Calculate positions
         for (auto &in : input){
-            in.position.x += rng.gaussian(6.f);
-            in.position.y += rng.gaussian(6.f);
+            in.position.x += rng.gaussian(8.f);
+            in.position.y += rng.gaussian(8.f);
             in.position.x += (400-in.position.x)/80;
             in.position.y += (300-in.position.y)/80;
             for (auto & in2 : input){
@@ -50,7 +50,16 @@ void *SimulatedInput::run() {
                 in.position.y -= (in2.position.y-in.position.y)/dist/dist*150;
             }
         }
-        perceive(input);
+
+        vector<Entity> en;
+        for (auto &in : input) {
+            if (rng.uniform(0., 1.) > 0.5){
+                en.push_back(in);
+            }
+        }
+
+
+        perceive(en);
         rate.sleep();
     }
     std::cout << "The thread died.\n";
