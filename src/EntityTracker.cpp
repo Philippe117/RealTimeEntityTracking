@@ -31,7 +31,7 @@ void EntityTracker::update(ros::Duration deltaTime) {
 
     // Write into all outputs
     for (auto output : mEntitiesOutput){
-        output->write(entities);
+        output->writeEntities(entities);
     }
 }
 
@@ -62,6 +62,11 @@ void EntityTracker::perceiveEntity(Entity entity){
 
 void EntityTracker::perceiveEntities(std::vector<Entity> entities){
     cout << "perceiving\n";
+    // Write into all outputs
+    for (auto output : mEntitiesOutput){
+        output->writePerceptions(entities);
+    }
+
     for (auto &perceived : entities){
 
         // Initialise the flag that tells if a match has been found.

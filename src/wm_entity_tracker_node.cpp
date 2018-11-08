@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     CvOutput output;
     EntityTracker tracker;
     tracker.addOutput(output);
-    SimulatedInput sim(tracker);
+    SimulatedInput sim(tracker, 10);
 
 
 

@@ -20,9 +20,8 @@ CvOutput::CvOutput() : img(600, 800, CV_8UC3) {
 }
 
 
-void CvOutput::write(const vector<Entity>& entities) {
-    imshow("mouse kalman", img);
-    img = Scalar::all(0);
+void CvOutput::writeEntities(const vector<Entity>& entities) {
+
 
     for (auto& entity : entities) {
         Point myEntity(entity.position.x, entity.position.y);
@@ -31,7 +30,19 @@ void CvOutput::write(const vector<Entity>& entities) {
     }
     cv::putText(img, "entities = " + to_string(entities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
 
+    imshow("mouse kalman", img);
     waitKey(10);
 }
+
+void CvOutput::writePerceptions(const vector<Entity>& entities) {
+    img = Scalar::all(0);
+    for (auto& entity : entities) {
+        Point myEntity(entity.position.x, entity.position.y);
+        drawCross( myEntity, Scalar(40,40,200), 4 );
+    }
+    cv::putText(img, "perceptions = " + to_string(entities.size()), Point(20, 50), FONT_HERSHEY_COMPLEX, 1, 255);
+
+}
+
 
 CvOutput::~CvOutput() = default;

@@ -15,7 +15,8 @@ class CvOutput : public EntityOutput {
 public:
     CvOutput();
     ~CvOutput() override ;
-    void write(const std::vector<sara_msgs::Entity>& entities) override ;
+    void writeEntities(const std::vector<sara_msgs::Entity>& entities) override ;
+    void writePerceptions(const std::vector<sara_msgs::Entity>& entities) override ;
 
 };
 

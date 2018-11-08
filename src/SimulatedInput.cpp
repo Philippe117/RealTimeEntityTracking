@@ -12,9 +12,16 @@ using namespace sara_msgs;
 using namespace cv;
 using namespace std;
 
-SimulatedInput::SimulatedInput(EntityTracker &tracker)
+SimulatedInput::SimulatedInput(EntityTracker &tracker, int quantity)
         : EntityInput(tracker),
-          mTread(&SimulatedInput::run, this){}
+          mTread(&SimulatedInput::run, this){
+    for (int i{0}; i<quantity; ++i){
+            Entity en;
+            en.position.x = 300;
+            en.position.y = 300;
+            input.push_back(en);
+    }
+}
 
 SimulatedInput::~SimulatedInput() {
     std::cout << "Wait for thread to die.\n";
@@ -22,32 +29,22 @@ SimulatedInput::~SimulatedInput() {
 }
 
 void *SimulatedInput::run() {
-    ros::Rate rate(10);
+    ros::Rate rate(20);
     RNG rng;
 
-    vector<Entity> input;
 
-    int nb{200};
     while (ros::ok()){
-        if (nb++ > 30) {
-            nb = 0;
-            Entity en;
-            en.position.x = 300;
-            en.position.y = 300;
-            input.push_back(en);
-        }
-
 
         // Calculate positions
         for (auto &in : input){
-            in.position.x += rng.gaussian(8.f);
-            in.position.y += rng.gaussian(8.f);
+            in.position.x += rng.gaussian(9.f);
+            in.position.y += rng.gaussian(9.f);
             in.position.x += (400-in.position.x)/80;
             in.position.y += (300-in.position.y)/80;
             for (auto & in2 : input){
                 float dist{1.f+float(hypot(in.position.x-in2.position.x, in.position.y-in2.position.y))};
-                in.position.x -= (in2.position.x-in.position.x)/dist/dist*150;
-                in.position.y -= (in2.position.y-in.position.y)/dist/dist*150;
+                in.position.x -= (in2.position.x-in.position.x)/dist/dist*200;
+                in.position.y -= (in2.position.y-in.position.y)/dist/dist*200;
             }
         }
 

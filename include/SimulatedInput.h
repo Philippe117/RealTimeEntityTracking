@@ -11,11 +11,12 @@
 class SimulatedInput : public EntityInput {
     std::thread mTread;
     void *run();
+    std::vector<sara_msgs::Entity> input;
 
 //    void perceive( std::vector<sara_msgs::Entity>& entities ) override ;
 
 public:
-    SimulatedInput(EntityTracker &tracker);
+    SimulatedInput(EntityTracker &tracker, int quantity);
     ~SimulatedInput();
 
 
