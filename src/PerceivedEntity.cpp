@@ -52,6 +52,8 @@ float PerceivedEntity::compareWith(const Entity &en) const{
     // Initialise the difference.
     float difference{0.0f};
 
+    if (name.compare(en.name) != 0) difference += 10000;
+
     // TODO Compare the two Entities using the weighted difference.
 
     return distance+difference;
