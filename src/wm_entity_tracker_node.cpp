@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "wm_entity_tracker");
     ros::NodeHandle nh;
 
-    CvOutput output;
+    CvOutput output(80, -500, -500);
     EntityTracker tracker;
     tracker.addOutput(output);
 //    SimulatedInput sim(tracker, 10);

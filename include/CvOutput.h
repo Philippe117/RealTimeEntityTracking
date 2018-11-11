@@ -12,8 +12,11 @@
 
 class CvOutput : public EntityOutput {
     cv::Mat img;
+    float mScaling;
+    float mCenterX;
+    float mCenterY;
 public:
-    CvOutput();
+    CvOutput(float scaling=1, float centerX=0, float centerY=0);
     ~CvOutput() override ;
     void writeEntities(const std::vector<sara_msgs::Entity>& entities) override ;
     void writePerceptions(const std::vector<sara_msgs::Entity>& entities) override ;
