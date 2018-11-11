@@ -11,17 +11,17 @@ using namespace people_msgs;
 
 PeopleLegInput::PeopleLegInput(EntityTracker &tracker, ros::NodeHandle &nh, const string topic)
         : EntityInput(tracker),
-          nodeHandle(nh),
-          spinner(1),
-          peopleSub()
+          mNodeHandle(nh),
+          mSpinner(1),
+          mPeopleSub()
 {
-    peopleSub = nh.subscribe(topic, 10, &PeopleLegInput::peopleLegCallback, this);
+    mPeopleSub = nh.subscribe(topic, 10, &PeopleLegInput::peopleLegCallback, this);
     cout << "buildo\n";
-    spinner.start();
+    mSpinner.start();
 }
 
 PeopleLegInput::~PeopleLegInput() {
-    spinner.stop();
+    mSpinner.stop();
 }
 
 void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
@@ -44,5 +44,5 @@ void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
     params.measurementNoiseCov = 10;
     params.errorCovPre = 0.9;
     params.errorCovPost = 0.9;
-    perceive(entities, params);
+    perceive(entities, false, params);
 }

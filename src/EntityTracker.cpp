@@ -52,15 +52,15 @@ void EntityTracker::deleteOld(){
     }
 }
 
-void EntityTracker::perceiveEntity(Entity entity, PerceivedEntity::KalmanParams params){
+void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntity::KalmanParams params){
 
     // Create a list of entities to call perceiveEntities.
     vector<Entity> entities;
     entities.push_back(entity);
-    return perceiveEntities(entities, params);
+    return perceiveEntities(entities, canCreate, params);
 }
 
-void EntityTracker::perceiveEntities(std::vector<Entity> entities, PerceivedEntity::KalmanParams params){
+void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params){
     cout << "perceiving\n";
     // Write into all outputs
     for (auto output : mEntitiesOutput){
@@ -81,7 +81,7 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, PerceivedEnti
                     break;
                 }
             }
-            if (notFoundYet) {
+            if (notFoundYet && canCreate){
                 addEntity(perceived);
             }
         } else {
@@ -111,7 +111,7 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, PerceivedEnti
             if (closest) {
                 // If the match is found, we update the entity.
                 closest->mergeOnto(perceived, params);
-            } else {
+            } else if (canCreate) {
                 // If not, we create the new entity and add it to the list.
                 // TODO: Maybe should not always result in creation. (maybe timer based IDK)
                 addEntity(perceived);

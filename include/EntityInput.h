@@ -15,8 +15,8 @@ class EntityInput {
 public:
     EntityInput(EntityTracker &tracker) : mTracker{tracker} {};
     EntityTracker & tracker(){return mTracker;}
-    void perceive( std::vector<sara_msgs::Entity>& entities, PerceivedEntity::KalmanParams params) {
-        tracker().perceiveEntities(entities, params);
+    void perceive( std::vector<sara_msgs::Entity>& entities, bool canCreate, PerceivedEntity::KalmanParams params) {
+        tracker().perceiveEntities(entities, canCreate, params);
     }
 };
 

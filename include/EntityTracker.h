@@ -26,8 +26,8 @@ class EntityTracker {
     // Give privileges to EntityInput class so it can call perceptions.
     friend class EntityInput;
     // Suggest the addition of a new entity to the list.
-    void perceiveEntities(std::vector<sara_msgs::Entity> entities, PerceivedEntity::KalmanParams params);
-    void perceiveEntity(sara_msgs::Entity entity, PerceivedEntity::KalmanParams params); // Same but for a single entity.
+    void perceiveEntities(std::vector<sara_msgs::Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params);
+    void perceiveEntity(sara_msgs::Entity entity, bool canCreate, PerceivedEntity::KalmanParams params); // Same but for a single entity.
 
 public:
     EntityTracker(ros::Duration deleteDelay=ros::Duration(5.f));

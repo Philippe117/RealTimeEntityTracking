@@ -12,12 +12,12 @@
 #include "sara_msgs/Entity.h"
 
 class PeopleLegInput : public EntityInput{
-    ros::NodeHandle nodeHandle;
-    ros::Subscriber peopleSub;
+    ros::NodeHandle mNodeHandle;
+    ros::Subscriber mPeopleSub;
     void peopleLegCallback(people_msgs::PositionMeasurementArray legArray);
-    ros::AsyncSpinner spinner;
+    ros::AsyncSpinner mSpinner;
 public:
-    PeopleLegInput(EntityTracker &tracker, ros::NodeHandle &nh, const std::string topic);
+    PeopleLegInput(EntityTracker &tracker, ros::NodeHandle &nh, std::string topic);
 
     ~PeopleLegInput();
 };

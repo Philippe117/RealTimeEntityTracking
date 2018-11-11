@@ -61,7 +61,7 @@ void *SimulatedInput::run() {
         params.measurementNoiseCov = 10;
         params.errorCovPre = 0.5;
         params.errorCovPost = 0.5;
-        perceive(en, params);
+        perceive(en,true, params);
         rate.sleep();
     }
     std::cout << "The thread died.\n";
