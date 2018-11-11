@@ -148,7 +148,7 @@ add_executable(
         src/PerceivedEntity.cpp
         src/EntityTracker.cpp
         src/wm_entity_tracker_node.cpp
-        src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h)
+        src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h src/PeopleLegInput.cpp include/PeopleLegInput.h)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
