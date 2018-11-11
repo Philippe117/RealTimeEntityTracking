@@ -12,10 +12,6 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): m
 
     // Initialise the kalman filter.
     setIdentity(mKF.measurementMatrix);
-    setIdentity(mKF.processNoiseCov, cv::Scalar::all(1e-5));
-    setIdentity(mKF.measurementNoiseCov, cv::Scalar::all(10));
-    setIdentity(mKF.errorCovPre, cv::Scalar::all(.5));
-    setIdentity(mKF.errorCovPost, cv::Scalar::all(.5));
 
     // Initialise the transition matrix
     float F{0.99f};
@@ -62,17 +58,23 @@ float PerceivedEntity::compareWith(const Entity &en) const{
 
 }
 
-void PerceivedEntity::mergeOnto(Entity &source){
+void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params){
 
     // Update the filter.
     mKF.predict();
 
     // Apply the kalman filter to the position
     Mat_<float> measurement(3,1); measurement.setTo(cv::Scalar(0));
-    measurement(0) = source.position.x;
-    measurement(1) = source.position.y;
-    measurement(2) = source.position.z;
+    measurement(0) = float(source.position.x);
+    measurement(1) = float(source.position.y);
+    measurement(2) = float(source.position.z);
     // TODO éssayer avec d'autres propriétées ex: hauteur, couleur, etc.
+
+    // Apply the input parameters and do the kalman correction
+    setIdentity(mKF.processNoiseCov, cv::Scalar::all(params.processNoiseCov));
+    setIdentity(mKF.measurementNoiseCov, cv::Scalar::all(params.measurementNoiseCov));
+    setIdentity(mKF.errorCovPre, cv::Scalar::all(params.errorCovPre));
+    setIdentity(mKF.errorCovPost, cv::Scalar::all(params.errorCovPost));
     mKF.correct(measurement);
 
     lastUpdateTime = ros::Time::now();

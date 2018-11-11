@@ -55,8 +55,13 @@ void *SimulatedInput::run() {
             }
         }
 
-
-        perceive(en);
+        // Apply the detection with the proper parameters.
+        PerceivedEntity::KalmanParams params;
+        params.processNoiseCov = 1e-5;
+        params.measurementNoiseCov = 10;
+        params.errorCovPre = 0.5;
+        params.errorCovPost = 0.5;
+        perceive(en, params);
         rate.sleep();
     }
     std::cout << "The thread died.\n";

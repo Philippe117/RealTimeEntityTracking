@@ -17,6 +17,12 @@ class PerceivedEntity : public sara_msgs::Entity {
     cv::KalmanFilter mKF;
 
 public:
+    struct KalmanParams{
+        double processNoiseCov{1e-5};
+        double measurementNoiseCov{10.};
+        double errorCovPre{0.5};
+        double errorCovPost{0.5};
+    };
 
     // Constructors and destructor.
     PerceivedEntity(float x, float y, float z, std::string name="");
@@ -28,7 +34,7 @@ public:
     float compareWith(const sara_msgs::Entity &en) const;
 
     // Merge an PerceivedEntity onto this one
-    void mergeOnto(sara_msgs::Entity &source);
+    void mergeOnto(sara_msgs::Entity &source, KalmanParams params);
 
     // Update the status of the Entity
     void update(const ros::Duration deltaTime);

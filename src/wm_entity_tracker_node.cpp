@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include "SimulatedInput.h"
 #include "CvOutput.h"
+#include "PeopleLegInput.h"
 
 #define drawCross( center, color, d ) \
 line( img, Point( center.x - d, center.y - d ), Point( center.x + d, center.y + d ), color, 2, CV_AA, 0); \
@@ -24,8 +25,8 @@ int main(int argc, char **argv) {
     CvOutput output;
     EntityTracker tracker;
     tracker.addOutput(output);
-    SimulatedInput sim(tracker, 10);
-
+//    SimulatedInput sim(tracker, 10);
+    PeopleLegInput people(tracker, nh, "/people_tracker_measurements");
 
 
     ros::Rate rate(30);
