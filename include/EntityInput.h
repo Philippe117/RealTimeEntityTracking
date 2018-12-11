@@ -12,12 +12,15 @@
 // Classe parent pour toutes les entrées possible d'un tracker.
 class EntityInput {
     EntityTracker &mTracker;
+    PerceivedEntity::KalmanParams mKalmanParams;
 public:
     EntityInput(EntityTracker &tracker) : mTracker{tracker} {};
     EntityTracker & tracker(){return mTracker;}
-    void perceive( std::vector<sara_msgs::Entity>& entities, bool canCreate, PerceivedEntity::KalmanParams params) {
-        tracker().perceiveEntities(entities, canCreate, params);
+    void perceive( std::vector<sara_msgs::Entity>& entities, bool canCreate) {
+        tracker().perceiveEntities(entities, canCreate, mKalmanParams);
     }
+    PerceivedEntity::KalmanParams kalmanParams(){ return mKalmanParams; }
+    void setKalmanParams(PerceivedEntity::KalmanParams params){ mKalmanParams=params; }
 };
 
 

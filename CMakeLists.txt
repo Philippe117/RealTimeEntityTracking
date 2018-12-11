@@ -7,7 +7,7 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp sara_msgs message_runtime)
+find_package(catkin REQUIRED COMPONENTS roscpp sara_msgs message_runtime dynamic_reconfigure)
 #find_package(sara_msgs REQUIRED)
 
 
@@ -94,10 +94,11 @@ endif()
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
-#   cfg/DynReconf2.cfg
-# )
+generate_dynamic_reconfigure_options(
+        cfg/wm_entity_tracker.cfg
+)
+
+
 
 ###################################
 ## catkin specific configuration ##
@@ -148,7 +149,8 @@ add_executable(
         src/PerceivedEntity.cpp
         src/EntityTracker.cpp
         src/wm_entity_tracker_node.cpp
-        src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h src/PeopleLegInput.cpp include/PeopleLegInput.h)
+        src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h src/PeopleLegInput.cpp include/PeopleLegInput.h src/BoundingBoxesInput.cpp include/BoundingBoxesInput.h)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -159,6 +161,7 @@ add_executable(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_gencfg)
 #add_dependencies(${PROJECT_NAME}_node sara_msgs)
 
 

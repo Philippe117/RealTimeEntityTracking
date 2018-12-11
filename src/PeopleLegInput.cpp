@@ -39,10 +39,5 @@ void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
             entities.push_back(en);
         }
     }
-    PerceivedEntity::KalmanParams params;
-    params.processNoiseCov = 1e-2;
-    params.measurementNoiseCov = 10;
-    params.errorCovPre = 0.9;
-    params.errorCovPost = 0.9;
-    perceive(entities, false, params);
+    perceive(entities, false);
 }

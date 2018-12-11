@@ -61,7 +61,7 @@ void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntit
 }
 
 void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params){
-    cout << "perceiving\n";
+    //cout << "perceiving\n";
     // Write into all outputs
     for (auto output : mEntitiesOutput){
         output->writePerceptions(entities);
@@ -88,7 +88,7 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreat
 
             // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
             // The inside loop will stop if there is already a better match.
-            float minDiff{32000.f};
+            float minDiff{10.f};
             PerceivedEntity *closest{nullptr};
             for (auto &entity : mEntities) {
                 auto diff{entity.compareWith(perceived)};

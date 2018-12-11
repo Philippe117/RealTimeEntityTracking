@@ -75,7 +75,7 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params){
     // Apply the input parameters and do the kalman correction
     setIdentity(mKF.processNoiseCov, cv::Scalar::all(params.processNoiseCov));
     setIdentity(mKF.measurementNoiseCov, cv::Scalar::all(params.measurementNoiseCov));
-    setIdentity(mKF.errorCovPre, cv::Scalar::all(params.errorCovPre));
+    //setIdentity(mKF.errorCovPre, cv::Scalar::all(params.errorCovPre));
     setIdentity(mKF.errorCovPost, cv::Scalar::all(params.errorCovPost));
     mKF.correct(measurement);
 
@@ -94,6 +94,7 @@ void PerceivedEntity::update(const ros::Duration deltaTime){
 
 void PerceivedEntity::updateStatus(){
     // Transfert the position from the state matrix to the Entity
+    //std::cout << mKF.statePost << "\n";
     position.x = mKF.statePost.at<float>(0);
     position.y = mKF.statePost.at<float>(1);
     position.z = mKF.statePost.at<float>(2);

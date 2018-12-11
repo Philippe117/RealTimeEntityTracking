@@ -15,8 +15,10 @@ BoundingBoxesInput::BoundingBoxesInput(EntityTracker &tracker, ros::NodeHandle &
           mSpinner(1),
           mBoundingBoxesSub()
 {
+    // Subscribe to the bounding box topic
     mBoundingBoxesSub = nh.subscribe(topic, 10, &BoundingBoxesInput::BoundingBoxesCallback, this);
-    cout << "buildo\n";
+
+    // Start the ros async spinner.
     mSpinner.start();
 }
 
@@ -51,10 +53,5 @@ void BoundingBoxesInput::BoundingBoxesCallback(sara_msgs::BoundingBoxes3D boundi
     }
 
 
-    PerceivedEntity::KalmanParams params;
-    params.processNoiseCov = 1e-2;
-    params.measurementNoiseCov = 10;
-    params.errorCovPre = 0.9;
-    params.errorCovPost = 0.9;
-    perceive(entities, true, params);
+    perceive(entities, true);
 }

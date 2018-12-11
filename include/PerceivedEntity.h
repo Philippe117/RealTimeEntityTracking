@@ -20,7 +20,6 @@ public:
     struct KalmanParams{
         double processNoiseCov{1e-5};
         double measurementNoiseCov{10.};
-        double errorCovPre{0.5};
         double errorCovPost{0.5};
     };
 
