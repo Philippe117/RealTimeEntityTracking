@@ -10,9 +10,9 @@ using namespace cv;
 using namespace std;
 using namespace sara_msgs;
 
-#define rescaleX(x) ((x-mMinX)*mScalingX)
+#define rescaleX(x) int((x-mMinX)*mScalingX)
 
-#define rescaleY(y) ((y-mMinY)*mScalingY)
+#define rescaleY(y) int((y-mMinY)*mScalingY)
 
 #define drawCross( center, color, d ) \
 cv::line( img, Point( center.x - d, center.y - d ), Point( center.x + d, center.y + d ), color, 2, CV_AA, 0); \
@@ -24,9 +24,9 @@ cv::line( img, Point( center.x + d, center.y ), Point( center.x - d, center.y ),
 
 
 CvOutput::CvOutput(float minX, float minY, float maxX, float maxY)
-        : img(600, 800, CV_8UC3),
-          mScalingX(800/-(minX-maxX)),
-          mScalingY(600/-(minY-maxY)),
+        : img(SCREENSIZEY, SCREENSIZEX, CV_8UC3),
+          mScalingX(SCREENSIZEX/-(minX-maxX)),
+          mScalingY(SCREENSIZEY/-(minY-maxY)),
           mMinX(minX),
           mMinY(minY){
 
@@ -37,8 +37,16 @@ CvOutput::CvOutput(float minX, float minY, float maxX, float maxY)
 void CvOutput::writeEntities(const vector<Entity>& entities) {
 
 
+//    mMinX+= mScalingX*0.00005f;
+//    mMinY+= mScalingY*0.00005f;
+//    mScalingX *= 1.0005f;
+//    mScalingY *= 1.0005f;
     for (auto& entity : entities) {
+        adaptScreen(entity);
         Point myEntity(rescaleX(entity.position.x), rescaleY(entity.position.y));
+
+
+        cv::line( img, Point( rescaleX(entity.position.x), rescaleY(entity.position.y) ), Point( rescaleX(entity.position.x+entity.velocity.x*10), rescaleY(entity.position.y+entity.velocity.y*10) ), Scalar(255,255,100), 2, CV_AA, 0 );
         drawCross( myEntity, Scalar(255,255,255), 5 );
         cv::putText(img, to_string(entity.ID), Point(rescaleX(entity.position.x), rescaleY(entity.position.y)-10), FONT_HERSHEY_COMPLEX, 1, 255);
         cv::putText(img, entity.name, Point(rescaleX(entity.position.x)+10, rescaleY(entity.position.y)), FONT_HERSHEY_COMPLEX, 0.5, 255);
@@ -46,12 +54,13 @@ void CvOutput::writeEntities(const vector<Entity>& entities) {
     cv::putText(img, "entities = " + to_string(entities.size()), Point(20, 20), FONT_HERSHEY_COMPLEX, 1, 255);
 
     imshow("mouse kalman", img);
+    img = Scalar::all(0);
     waitKey(10);
 }
 
 void CvOutput::writePerceptions(const vector<Entity>& entities) {
-    img = Scalar::all(0);
     for (auto& entity : entities) {
+        adaptScreen(entity);
         Point myEntity(rescaleX(entity.position.x), rescaleY(entity.position.y));
         drawX( myEntity, Scalar(40,40,200), 6 );
     }
@@ -59,5 +68,11 @@ void CvOutput::writePerceptions(const vector<Entity>& entities) {
 
 }
 
+void CvOutput::adaptScreen( const Entity & entity) {
+    mMinX = min(float(entity.position.x)-20/mScalingX, mMinX);
+    mMinY = min(float(entity.position.y)-20/mScalingY, mMinY);
+    mScalingX = min(SCREENSIZEX/float(entity.position.x-mMinX+20/mScalingX), mScalingX);
+    mScalingY = min(SCREENSIZEY/float(entity.position.y-mMinY+20/mScalingY), mScalingY);
+}
 
 CvOutput::~CvOutput() = default;
