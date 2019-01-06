@@ -41,6 +41,11 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
     params.measurementNoiseCov = config.bounding_boxes_input_measurementNoiseCov;
     params.errorCovPost = config.bounding_boxes_input_errorCovPost;
     boundingBoxesInput->setKalmanParams(params);
+
+    tracker->setDeleteDelay(ros::Duration(config.delete_delay));
+    PerceivedEntity::setXY(config.weights_XY);
+    PerceivedEntity::setZ(config.weights_Z);
+
     cout << "reconfig\n" << boundingBoxesInput->kalmanParams().processNoiseCov << "\n"\
                          << boundingBoxesInput->kalmanParams().measurementNoiseCov << "\n"\
                          << boundingBoxesInput->kalmanParams().errorCovPost << "\n";

@@ -15,6 +15,8 @@
 /// Contain a kalman filter and some utilities used for multitracking and stuff.
 class PerceivedEntity : public sara_msgs::Entity {
     cv::KalmanFilter mKF;
+    static float mXY;
+    static float mZ;
 
 public:
     struct KalmanParams{
@@ -40,6 +42,12 @@ public:
 
     // Update the position and velocity of the Entity from the kalman filter.
     void updateStatus();
+
+    // Accesseurs
+    static float xY() {return mXY;}
+    static void setXY(float value) {mXY=value;}
+    static float z() {return mZ;}
+    static void setZ(float value) {mZ=value;}
 
 };
 

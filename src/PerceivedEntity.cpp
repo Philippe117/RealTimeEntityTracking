@@ -7,8 +7,13 @@
 using namespace sara_msgs;
 using namespace cv;
 
+float PerceivedEntity::mXY = 1.0;
+float PerceivedEntity::mZ = 1.0;
 
-PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name): mKF(6, 3, 0) {
+
+PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name):
+        mKF(6, 3, 0)
+{
 
     // Initialise the kalman filter.
     setIdentity(mKF.measurementMatrix);
@@ -47,7 +52,7 @@ float PerceivedEntity::compareWith(const Entity &en) const{
     float dZ{float(position.z-en.position.z)};
 
     // Calculate the hypotenuse.
-    float distance{sqrt(dX*dX + dY*dY + dZ*dZ)};
+    float distance{sqrt(dX*dX*mXY + dY*dY*mXY + dZ*dZ*mZ)};
 
     // Initialise the difference.
     float difference{0.0f};
