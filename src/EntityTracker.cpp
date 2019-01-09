@@ -17,7 +17,7 @@ EntityTracker::~EntityTracker() {
 void EntityTracker::update(ros::Duration deltaTime) {
 
     // Delete all old entities.
-    deleteOld();
+    deleteDeads();
 
     // Update all entities.
     for (auto &entity : mEntities){
@@ -35,21 +35,12 @@ void EntityTracker::update(ros::Duration deltaTime) {
     }
 }
 
-void EntityTracker::deleteOld(){
-    // Create a list of entities to delete.
-    vector<int> toDelete;
-    int i{0};
-    for (auto &entity : mEntities){
-        if (entity.lastUpdateTime < ros::Time::now()-deleteDelay()){
-            toDelete.push_back(i);
-        }
-        ++i;
-    }
+bool entityIsDead (PerceivedEntity & entity){
+    return entity.probability < 0;
+}
 
-    // Delete all marked entities.
-    for (auto &del : toDelete){
-        mEntities.erase(mEntities.begin()+del);
-    }
+void EntityTracker::deleteDeads(){
+    mEntities.erase(std::remove_if(mEntities.begin(),mEntities.end(),entityIsDead), mEntities.end());
 }
 
 void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntity::KalmanParams params){
@@ -68,6 +59,7 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreat
     }
 
     for (auto &perceived : entities){
+        cout << "prob= " << to_string(perceived.probability) << "\n";
 
         // Initialise the flag that tells if a match has been found.
         bool notFoundYet{true};
@@ -88,7 +80,7 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreat
 
             // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
             // The inside loop will stop if there is already a better match.
-            float minDiff{10.f};
+            float minDiff{10000000.f};
             PerceivedEntity *closest{nullptr};
             for (auto &entity : mEntities) {
                 auto diff{entity.compareWith(perceived)};

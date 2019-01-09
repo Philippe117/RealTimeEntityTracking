@@ -17,8 +17,8 @@ class EntityTracker {
     int mNextID;
     std::vector<EntityOutput*> mEntitiesOutput;
 
-    // Check all old entities and delete them.
-    void deleteOld();
+    // Check all old or uniquely entities and delete them.
+    void deleteDeads();
 
     // Add an entity to the list and assing a procedural ID.
     void addEntity(sara_msgs::Entity &entity);

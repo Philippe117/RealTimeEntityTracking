@@ -47,7 +47,7 @@ void CvOutput::writeEntities(const vector<Entity>& entities) {
 
 
         cv::line( img, Point( rescaleX(entity.position.x), rescaleY(entity.position.y) ), Point( rescaleX(entity.position.x+entity.velocity.x*10), rescaleY(entity.position.y+entity.velocity.y*10) ), Scalar(255,255,100), 2, CV_AA, 0 );
-        drawCross( myEntity, Scalar(255,255,255), 5 );
+        drawCross( myEntity, Scalar(0, entity.probability*255,255-entity.probability*255), 8 );
         cv::putText(img, to_string(entity.ID), Point(rescaleX(entity.position.x), rescaleY(entity.position.y)-10), FONT_HERSHEY_COMPLEX, 1, 255);
         cv::putText(img, entity.name, Point(rescaleX(entity.position.x)+10, rescaleY(entity.position.y)), FONT_HERSHEY_COMPLEX, 0.5, 255);
     }
@@ -62,7 +62,7 @@ void CvOutput::writePerceptions(const vector<Entity>& entities) {
     for (auto& entity : entities) {
         adaptScreen(entity);
         Point myEntity(rescaleX(entity.position.x), rescaleY(entity.position.y));
-        drawX( myEntity, Scalar(40,40,200), 6 );
+        drawX( myEntity, Scalar(120,0,255), 6 );
     }
     cv::putText(img, "perceptions = " + to_string(entities.size()), Point(20, 50), FONT_HERSHEY_COMPLEX, 1, 255);
 

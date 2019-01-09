@@ -86,11 +86,12 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params){
 
     lastUpdateTime = ros::Time::now();
 
-    // Update the position
-    updateStatus();
+    probability += (source.probability-probability)*0.5; // TODO ajouter un taux paramétrable
 }
 
 void PerceivedEntity::update(const ros::Duration deltaTime){
+    // Reduce slightly the existance probability
+    probability -= 0.005;  //
     // Predict the next position.
     mKF.predict();
     // Update the Entities

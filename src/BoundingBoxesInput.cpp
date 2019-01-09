@@ -41,7 +41,7 @@ void BoundingBoxesInput::BoundingBoxesCallback(sara_msgs::BoundingBoxes3D boundi
         en.probability = boundingBox.probability;
         en.lastUpdateTime = boundingBoxes3D.header.stamp;
 
-        if (en.probability > 0.1) {
+        if (en.probability > 0) {
             // If the entity is a person
             if (en.name.compare("person") == 0) {
                 en.position.z = 0;
