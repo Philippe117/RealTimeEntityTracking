@@ -28,7 +28,23 @@ public:
     // Constructors and destructor.
     PerceivedEntity(float x, float y, float z, std::string name="");
     PerceivedEntity(sara_msgs::Entity &entity) :
-            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name){}
+            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name){
+        probability = entity.probability;
+        size = entity.size;
+        ID = entity.ID;
+        wonderlandId = entity.wonderlandId;
+        weight = entity.weight;
+        waypoint = entity.waypoint;
+        poseProbability = entity.poseProbability;
+        isOperator = entity.isOperator;
+        face = entity.face;
+        containerId = entity.containerId;
+        color = entity.color;
+        category = entity.category;
+        BoundingBox = entity.BoundingBox;
+        aliases = entity.aliases;
+        lastUpdateTime = entity.lastUpdateTime;
+    }
     ~PerceivedEntity();
 
     // Allow to obtain the weighted difference between two entities
