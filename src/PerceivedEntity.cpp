@@ -57,6 +57,10 @@ float PerceivedEntity::compareWith(const Entity &en) const{
     // Initialise the difference.
     float difference{0.0f};
 
+    // Prend compte des probabilitées
+    difference += probability > 0 ? 1/probability : 10000;  // TODO Utiliser un paramêtre de weight
+    difference += en.probability > 0 ? 1/en.probability : 10000;  // TODO Utiliser un paramêtre de weight
+
     if (name.compare(en.name) != 0) difference += 10000;
 
     // TODO Compare the two Entities using the weighted difference.
@@ -86,12 +90,12 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params){
 
     lastUpdateTime = ros::Time::now();
 
-    probability += (source.probability-probability)*0.5; // TODO ajouter un taux paramétrable
+    probability += (source.probability-probability)*0.1; // TODO ajouter un taux paramétrable
 }
 
 void PerceivedEntity::update(const ros::Duration deltaTime){
     // Reduce slightly the existance probability
-    probability -= 0.005;  //
+    probability -= 0.0025;  //
     // Predict the next position.
     mKF.predict();
     // Update the Entities

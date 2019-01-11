@@ -118,6 +118,7 @@ void EntityTracker::addEntity(Entity &newEntity){
     // Initialise the ID if needed.
     if (entity.ID == 0) entity.ID = mNextID++;
 
+    entity.probability *= 0.1;  // TODO ajouter paramètre
     mEntities.push_back(entity);
     return;
 }
