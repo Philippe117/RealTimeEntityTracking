@@ -65,14 +65,20 @@ void CvOutput::writePerceptions(const vector<Entity>& entities) {
         drawX( myEntity, Scalar(120,0,255), 6 );
     }
     cv::putText(img, "perceptions = " + to_string(entities.size()), Point(20, 50), FONT_HERSHEY_COMPLEX, 1, 255);
-
 }
 
 void CvOutput::adaptScreen( const Entity & entity) {
-    mMinX = min(float(entity.position.x)-20/mScalingX, mMinX);
-    mMinY = min(float(entity.position.y)-20/mScalingY, mMinY);
-    mScalingX = min(SCREENSIZEX/float(entity.position.x-mMinX+20/mScalingX), mScalingX);
-    mScalingY = min(SCREENSIZEY/float(entity.position.y-mMinY+20/mScalingY), mScalingY);
+    try {
+        mMinX = min(float(entity.position.x)-20/mScalingX, mMinX);
+        mMinY = min(float(entity.position.y)-20/mScalingY, mMinY);
+        mScalingX = min(SCREENSIZEX/float(entity.position.x-mMinX+20/mScalingX), mScalingX);
+        mScalingY = min(SCREENSIZEY/float(entity.position.y-mMinY+20/mScalingY), mScalingY);
+    } catch (cv::Exception){
+        mMinX = 0;
+        mMinY = 0;
+        mScalingX = 10;
+        mScalingY = 10;
+    }
 }
 
 CvOutput::~CvOutput() = default;
