@@ -6,8 +6,7 @@
 using namespace std;
 using namespace sara_msgs;
 
-EntityTracker::EntityTracker(ros::Duration deleteDelay) :
-        mDeleteDelay{deleteDelay},
+EntityTracker::EntityTracker() :
         mNextID{1}{}
 
 EntityTracker::~EntityTracker() {
@@ -112,15 +111,6 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreat
     }
 }
 
-
-ros::Duration EntityTracker::deleteDelay() const{
-    return mDeleteDelay;
-}
-
-ros::Duration EntityTracker::setDeleteDelay(ros::Duration value){
-    mDeleteDelay = value;
-    return mDeleteDelay;
-}
 
 void EntityTracker::addEntity(Entity &newEntity){
     PerceivedEntity entity{PerceivedEntity(newEntity)};

@@ -13,11 +13,10 @@ class EntityInput;
 
 class EntityTracker {
     std::vector<PerceivedEntity> mEntities;
-    ros::Duration mDeleteDelay;
     int mNextID;
     std::vector<EntityOutput*> mEntitiesOutput;
 
-    // Check all old or uniquely entities and delete them.
+    // Check all unlikely entities and delete them.
     void deleteDeads();
 
     // Add an entity to the list and assing a procedural ID.
@@ -25,21 +24,16 @@ class EntityTracker {
 
     // Give privileges to EntityInput class so it can call perceptions.
     friend class EntityInput;
-    // Suggest the addition of a new entity to the list.
+    // Suggest the addition of new entities to the list.
     void perceiveEntities(std::vector<sara_msgs::Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params);
     void perceiveEntity(sara_msgs::Entity entity, bool canCreate, PerceivedEntity::KalmanParams params); // Same but for a single entity.
 
 public:
-    EntityTracker(ros::Duration deleteDelay=ros::Duration(5.f));
+    EntityTracker();
     ~EntityTracker();
 
     // Update the status of all tracked entities.
     void update(ros::Duration deltaTime);
-
-
-    // Accessors for deleteDelay.
-    ros::Duration deleteDelay() const;
-    ros::Duration setDeleteDelay(ros::Duration value);
 
     // Accessors for outputs.
     void addOutput(EntityOutput & output);
