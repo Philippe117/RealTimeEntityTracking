@@ -15,6 +15,11 @@ EntityTracker::~EntityTracker() {
 
 void EntityTracker::update(ros::Duration deltaTime) {
 
+    // Reduce slightly the existance probability to eliminate old entities.
+    for (auto &entity : mEntities){
+        entity.probability -= decayRate();
+    }
+
     // Delete all old entities.
     deleteDeads();
 

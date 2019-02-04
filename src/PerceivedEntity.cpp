@@ -94,8 +94,6 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params){
 }
 
 void PerceivedEntity::update(const ros::Duration deltaTime){
-    // Reduce slightly the existance probability
-    probability -= 0.0025;  //
     // Predict the next position.
     mKF.predict();
     // Update the Entities

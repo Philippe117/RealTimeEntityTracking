@@ -15,6 +15,7 @@ class EntityTracker {
     std::vector<PerceivedEntity> mEntities;
     int mNextID;
     std::vector<EntityOutput*> mEntitiesOutput;
+    float mDecayRate{0.0025};
 
     // Check all unlikely entities and delete them.
     void deleteDeads();
@@ -34,6 +35,9 @@ public:
 
     // Update the status of all tracked entities.
     void update(ros::Duration deltaTime);
+
+    float decayRate(){ return mDecayRate; };
+    void setDecayRate( float value ){ mDecayRate = value; };
 
     // Accessors for outputs.
     void addOutput(EntityOutput & output);
