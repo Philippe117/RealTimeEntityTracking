@@ -1,5 +1,6 @@
 
 #include "EntityTracker.h"
+#include "RvizOutput.h"
 #include <iostream>
 #include <vector>
 #include <ros/ros.h>
@@ -8,6 +9,7 @@
 #include "PeopleLegInput.h"
 #include "BoundingBoxesInput.h"
 #include <dynamic_reconfigure/server.h>
+#include <RvizOutput.h>
 #include "wm_entity_tracker/wm_entity_trackerConfig.h"
 
 #define drawCross( center, color, d ) \
@@ -64,8 +66,10 @@ int main(int argc, char **argv) {
 //    simulatedinput = new SimulatedInput(*tracker, 10);
 //    peopleLegInput = new PeopleLegInput(*tracker, nh, "/people_tracker_measurements");
 
-    cvOutput = new CvOutput(0, 0, 1, 1);
-    tracker->addOutput(*cvOutput);
+    //cvOutput = new CvOutput(0, 0, 1, 1);
+    //tracker->addOutput(*cvOutput);
+    auto rvizOutput = new RvizOutput(nh);
+    tracker->addOutput(*rvizOutput);
 
 
     // Configure the dynamic reconfigure thigny
