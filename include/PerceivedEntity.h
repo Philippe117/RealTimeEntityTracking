@@ -18,6 +18,7 @@ class PerceivedEntity : public sara_msgs::Entity {
     static float mXYWeight;
     static float mZWeight;
     static float mProbabilityWeight;
+    std::vector<int> mAssociatedFaceIDs;
 
 public:
     struct KalmanParams {
@@ -75,6 +76,10 @@ public:
 
     static void setProbabilityWeight(float value) { mProbabilityWeight = value; }
 
+    // Verify if a faceID is in the list  of associated faceIDs.
+    bool checkFaceID(int faceID);
+    // Add a faceID to the list of associated faceIDs. Return true if the face already exist in the list.
+    bool addFaceID(int faceID);
 };
 
 

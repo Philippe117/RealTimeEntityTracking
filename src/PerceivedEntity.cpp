@@ -113,3 +113,19 @@ void PerceivedEntity::updateStatus() {
     velocity.y = mKF.statePost.at<float>(4);
     velocity.z = mKF.statePost.at<float>(5);
 }
+
+bool PerceivedEntity::checkFaceID(int faceID) {
+    for (auto & ID : mAssociatedFaceIDs){
+        if (ID == faceID){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PerceivedEntity::addFaceID(int faceID) {
+    if (!checkFaceID(faceID)){
+        mAssociatedFaceIDs.push_back(faceID);
+    }
+    return true;
+}

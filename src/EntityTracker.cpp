@@ -85,6 +85,14 @@ EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, Pe
             if (notFoundYet && canCreate) {
                 addEntity(perceived);
             }
+        } else if (perceived.face.id != "") { // If the face is defined, we look for a match
+            for (auto &entity : mEntities) {
+                if (entity.ID == perceived.ID) {
+                    notFoundYet = false;
+                    entity.mergeOnto(perceived, params);
+                    break;
+                }
+            }
         } else {
             // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
             // The inside loop will stop if there is already a better match.
