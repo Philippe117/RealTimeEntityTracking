@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(kalman_test)
+project(wm_entity_tracker)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -7,7 +7,7 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp sara_msgs message_runtime)
+find_package(catkin REQUIRED COMPONENTS roscpp sara_msgs message_runtime dynamic_reconfigure)
 #find_package(sara_msgs REQUIRED)
 
 
@@ -94,10 +94,11 @@ endif()
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
-#   cfg/DynReconf2.cfg
-# )
+generate_dynamic_reconfigure_options(
+        cfg/wm_entity_tracker.cfg
+)
+
+
 
 ###################################
 ## catkin specific configuration ##
@@ -109,7 +110,9 @@ endif()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-
+        CATKIN_DEPENDS
+        sara_msgs
+        roscpp
 )
 
 ###########
@@ -126,7 +129,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/kalman_test.cpp
+#   src/${PROJECT_NAME}/wm_entity_tracker.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -137,7 +140,17 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/kalman_test_node.cpp src/PerceivedEntity.cpp include/PerceivedEntity.h)
+add_executable(
+        ${PROJECT_NAME}_node
+        include/EntityInput.h
+        include/EntityOutput.h
+        include/EntityTracker.h
+        include/PerceivedEntity.h
+        src/PerceivedEntity.cpp
+        src/EntityTracker.cpp
+        src/wm_entity_tracker_node.cpp
+        src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h src/PeopleLegInput.cpp include/PeopleLegInput.h src/BoundingBoxesInput.cpp include/BoundingBoxesInput.h)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,6 +161,7 @@ add_executable(${PROJECT_NAME}_node src/kalman_test_node.cpp src/PerceivedEntity
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_gencfg)
 #add_dependencies(${PROJECT_NAME}_node sara_msgs)
 
 
@@ -197,7 +211,7 @@ target_link_libraries(${PROJECT_NAME}_node ${OpenCV_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_kalman_test.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_wm_entity_tracker.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
