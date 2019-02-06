@@ -90,7 +90,8 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params){
 
     lastUpdateTime = ros::Time::now();
 
-    probability += (source.probability-probability)*0.1; // TODO ajouter un taux paramétrable
+    if (probability < source.probability)
+        probability += (source.probability-probability)*0.1; // TODO ajouter un taux paramétrable
 }
 
 void PerceivedEntity::update(const ros::Duration deltaTime){
