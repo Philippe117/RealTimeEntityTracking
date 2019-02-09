@@ -16,9 +16,12 @@ class RvizOutput : public EntityOutput {
 
 public:
     RvizOutput(ros::NodeHandle &nh);
-    ~RvizOutput() override ;
-    void writeEntities(const std::vector<sara_msgs::Entity>& entities) override ;
-    void writePerceptions(const std::vector<sara_msgs::Entity>& entities) override ;
+
+    ~RvizOutput() override;
+
+    void writeEntities(const std::vector<sara_msgs::Entity> &entities) override;
+
+    void writePerceptions(const std::vector<sara_msgs::Entity> &entities) override;
 
 };
 

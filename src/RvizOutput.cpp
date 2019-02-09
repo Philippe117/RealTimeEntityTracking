@@ -9,14 +9,14 @@
 using namespace std;
 using namespace sara_msgs;
 
-RvizOutput::RvizOutput(ros::NodeHandle &nh){
+RvizOutput::RvizOutput(ros::NodeHandle &nh) {
 
 
     markerPublisher = nh.advertise<visualization_msgs::Marker>("entity_tracker/markers", 100);
 }
 
 
-void RvizOutput::writeEntities(const vector<Entity>& entities) {
+void RvizOutput::writeEntities(const vector<Entity> &entities) {
     visualization_msgs::Marker m;
     m.header.stamp = ros::Time::now();
     m.lifetime = ros::Duration(0.5);
@@ -59,7 +59,7 @@ void RvizOutput::writeEntities(const vector<Entity>& entities) {
     idTag.color.b = 0.0;
     idTag.color.a = 1;
 
-    for (auto& entity : entities) {
+    for (auto &entity : entities) {
         m.id = entity.ID;
         m.color.r = float(1 - entity.probability);
         m.color.g = float(entity.probability);
@@ -83,14 +83,13 @@ void RvizOutput::writeEntities(const vector<Entity>& entities) {
 }
 
 
-void RvizOutput::writePerceptions(const vector<Entity>& entities) {
+void RvizOutput::writePerceptions(const vector<Entity> &entities) {
 
     visualization_msgs::Marker m;
     m.header.stamp = ros::Time::now();
     m.lifetime = ros::Duration(0.2);
     m.header.frame_id = "/map";
     m.ns = "perceptions";
-    m.id = ros::Time::now().toNSec();
     m.type = m.SPHERE;
     m.scale.x = 0.05;
     m.scale.y = 0.05;
@@ -99,9 +98,10 @@ void RvizOutput::writePerceptions(const vector<Entity>& entities) {
     m.color.g = 0;
     m.color.b = 0;
     m.color.a = 1;
-    for (auto& entity : entities) {
+    for (auto &entity : entities) {
         int i{0};
         {
+            m.id = ros::Time::now().toNSec();
             m.pose.position = entity.position;
             markerPublisher.publish(m);
         }

@@ -13,8 +13,7 @@ PeopleLegInput::PeopleLegInput(EntityTracker &tracker, ros::NodeHandle &nh, cons
         : EntityInput(tracker),
           mNodeHandle(nh),
           mSpinner(1),
-          mPeopleSub()
-{
+          mPeopleSub() {
     mPeopleSub = nh.subscribe(topic, 10, &PeopleLegInput::peopleLegCallback, this);
     mSpinner.start();
 }
@@ -30,7 +29,7 @@ void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
         if (legs.reliability > 0) {
             sara_msgs::Entity en;
             en.position = legs.pos;
-            en.probability = 0.001;
+            en.probability = legs.reliability / 2; // TODO fixit
             en.name = "person";
             en.lastUpdateTime = legs.header.stamp;
 

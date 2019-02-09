@@ -20,12 +20,17 @@ class CvOutput : public EntityOutput {
     float mMinY;
     float mScalingX;
     float mScalingY;
-    void adaptScreen( const sara_msgs::Entity & entity);
+
+    void adaptScreen(const sara_msgs::Entity &entity);
+
 public:
-    CvOutput(float minX=-10, float minY=-10, float maxX=10, float maxY=10);
-    ~CvOutput() override ;
-    void writeEntities(const std::vector<sara_msgs::Entity>& entities) override ;
-    void writePerceptions(const std::vector<sara_msgs::Entity>& entities) override ;
+    CvOutput(float minX = -10, float minY = -10, float maxX = 10, float maxY = 10);
+
+    ~CvOutput() override;
+
+    void writeEntities(const std::vector<sara_msgs::Entity> &entities) override;
+
+    void writePerceptions(const std::vector<sara_msgs::Entity> &entities) override;
 
 };
 

@@ -11,10 +11,12 @@
 #include <vector>
 #include "sara_msgs/Entity.h"
 
-class PeopleLegInput : public EntityInput{
+class PeopleLegInput : public EntityInput {
     ros::NodeHandle mNodeHandle;
     ros::Subscriber mPeopleSub;
+
     void peopleLegCallback(people_msgs::PositionMeasurementArray legArray);
+
     ros::AsyncSpinner mSpinner;
 public:
     PeopleLegInput(EntityTracker &tracker, ros::NodeHandle &nh, std::string topic);

@@ -6,17 +6,18 @@
 using namespace std;
 using namespace sara_msgs;
 
-EntityTracker::EntityTracker() :
-        mNextID{1}{}
+EntityTracker::EntityTracker() : mNextID{1} {
+    perceptionMutex.unlock();
+}
 
 EntityTracker::~EntityTracker() {
     mEntities.clear();
 }
 
 void EntityTracker::update(ros::Duration deltaTime) {
-
+    perceptionMutex.lock();
     // Reduce slightly the existance probability to eliminate old entities.
-    for (auto &entity : mEntities){
+    for (auto &entity : mEntities) {
         entity.probability -= decayRate();
     }
 
@@ -24,30 +25,32 @@ void EntityTracker::update(ros::Duration deltaTime) {
     deleteDeads();
 
     // Update all entities.
-    for (auto &entity : mEntities){
+    for (auto &entity : mEntities) {
         entity.update(deltaTime);
     }
 
     vector<Entity> entities;
-    for (auto &entity : mEntities){
-        entities.push_back(Entity(entity));
+    for (auto &entity : mEntities) {
+        if (entity.probability > publicationTreashold())
+            entities.push_back(Entity(entity));
     }
 
     // Write into all outputs
-    for (auto output : mEntitiesOutput){
+    for (auto output : mEntitiesOutput) {
         output->writeEntities(entities);
     }
+    perceptionMutex.unlock();
 }
 
-bool entityIsDead (PerceivedEntity & entity){
+bool entityIsDead(PerceivedEntity &entity) {
     return entity.probability < 0;
 }
 
-void EntityTracker::deleteDeads(){
-    mEntities.erase(std::remove_if(mEntities.begin(),mEntities.end(),entityIsDead), mEntities.end());
+void EntityTracker::deleteDeads() {
+    mEntities.erase(std::remove_if(mEntities.begin(), mEntities.end(), entityIsDead), mEntities.end());
 }
 
-void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntity::KalmanParams params){
+void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntity::KalmanParams params) {
 
     // Create a list of entities to call perceiveEntities.
     vector<Entity> entities;
@@ -55,15 +58,17 @@ void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntit
     return perceiveEntities(entities, canCreate, params);
 }
 
-void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params){
-    //cout << "perceiving\n";
+void
+EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params) {
+
     // Write into all outputs
-    for (auto output : mEntitiesOutput){
+    for (auto output : mEntitiesOutput) {
         output->writePerceptions(entities);
     }
 
-    for (auto &perceived : entities){
-        cout << "prob= " << to_string(perceived.probability) << "\n";
+    perceptionMutex.lock();
+    for (auto &perceived : entities) {
+        //cout << "prob= " << to_string(perceived.probability) << "\n";
 
         // Initialise the flag that tells if a match has been found.
         bool notFoundYet{true};
@@ -77,14 +82,13 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreat
                     break;
                 }
             }
-            if (notFoundYet && canCreate){
+            if (notFoundYet && canCreate) {
                 addEntity(perceived);
             }
         } else {
-
             // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
             // The inside loop will stop if there is already a better match.
-            float minDiff{10000000.f};
+            float minDiff{maximumDifference()};
             PerceivedEntity *closest{nullptr};
             for (auto &entity : mEntities) {
                 auto diff{entity.compareWith(perceived)};
@@ -112,12 +116,15 @@ void EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreat
                 // TODO: Maybe should not always result in creation. (maybe timer based IDK)
                 addEntity(perceived);
             }
+
         }
     }
+    perceptionMutex.unlock();
 }
 
 
-void EntityTracker::addEntity(Entity &newEntity){
+void EntityTracker::addEntity(Entity &newEntity) {
+
     PerceivedEntity entity{PerceivedEntity(newEntity)};
 
     // Initialise the ID if needed.

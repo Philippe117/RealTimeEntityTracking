@@ -1,5 +1,5 @@
 <launch>
-    <rosparam file="$(find sara_launch)/sh_files/ressources/categoryToNames.yaml" command="load" />
+    <rosparam file="$(find sara_launch)/sh_files/ressources/categoryToNames.yaml" command="load"/>
 
-	<node  name="entity_tracker"	pkg="wm_entity_tracker"	type="wm_entity_tracker_node" output="screen"/>
+    <node name="entity_tracker" pkg="wm_entity_tracker" type="wm_entity_tracker_node" output="screen"/>
 </launch>
