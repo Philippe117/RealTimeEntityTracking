@@ -142,6 +142,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(
         ${PROJECT_NAME}_node
+        include/RvizOutput.h
+        src/RvizOutput.cpp
         include/EntityInput.h
         include/EntityOutput.h
         include/EntityTracker.h

@@ -13,10 +13,8 @@ PeopleLegInput::PeopleLegInput(EntityTracker &tracker, ros::NodeHandle &nh, cons
         : EntityInput(tracker),
           mNodeHandle(nh),
           mSpinner(1),
-          mPeopleSub()
-{
+          mPeopleSub() {
     mPeopleSub = nh.subscribe(topic, 10, &PeopleLegInput::peopleLegCallback, this);
-    cout << "buildo\n";
     mSpinner.start();
 }
 
@@ -25,14 +23,13 @@ PeopleLegInput::~PeopleLegInput() {
 }
 
 void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
-    cout << "test\n";
     vector<Entity> entities;
 
     for (auto legs : legArray.people) {
         if (legs.reliability > 0) {
             sara_msgs::Entity en;
             en.position = legs.pos;
-            en.probability = 0.5;
+            en.probability = legs.reliability / 2; // TODO fixit
             en.name = "person";
             en.lastUpdateTime = legs.header.stamp;
 

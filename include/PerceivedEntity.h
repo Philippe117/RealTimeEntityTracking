@@ -15,20 +15,22 @@
 /// Contain a kalman filter and some utilities used for multitracking and stuff.
 class PerceivedEntity : public sara_msgs::Entity {
     cv::KalmanFilter mKF;
-    static float mXY;
-    static float mZ;
+    static float mXYWeight;
+    static float mZWeight;
+    static float mProbabilityWeight;
 
 public:
-    struct KalmanParams{
+    struct KalmanParams {
         double processNoiseCov{1e-5};
         double measurementNoiseCov{10.};
         double errorCovPost{0.5};
     };
 
     // Constructors and destructor.
-    PerceivedEntity(float x, float y, float z, std::string name="");
+    PerceivedEntity(float x, float y, float z, std::string name = "");
+
     PerceivedEntity(sara_msgs::Entity &entity) :
-            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name){
+            PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name) {
         probability = entity.probability;
         size = entity.size;
         ID = entity.ID;
@@ -45,6 +47,7 @@ public:
         aliases = entity.aliases;
         lastUpdateTime = entity.lastUpdateTime;
     }
+
     ~PerceivedEntity();
 
     // Allow to obtain the weighted difference between two entities
@@ -60,10 +63,17 @@ public:
     void updateStatus();
 
     // Accesseurs
-    static float xY() {return mXY;}
-    static void setXY(float value) {mXY=value;}
-    static float z() {return mZ;}
-    static void setZ(float value) {mZ=value;}
+    static float xYWeight() { return mXYWeight; }
+
+    static void setXYWeight(float value) { mXYWeight = value; }
+
+    static float zWeight() { return mZWeight; }
+
+    static void setZWeight(float value) { mZWeight = value; }
+
+    static float probabilityWeight() { return mProbabilityWeight; }
+
+    static void setProbabilityWeight(float value) { mProbabilityWeight = value; }
 
 };
 

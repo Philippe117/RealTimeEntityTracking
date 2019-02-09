@@ -13,8 +13,7 @@ BoundingBoxesInput::BoundingBoxesInput(EntityTracker &tracker, ros::NodeHandle &
         : EntityInput(tracker),
           mNodeHandle(nh),
           mSpinner(1),
-          mBoundingBoxesSub()
-{
+          mBoundingBoxesSub() {
     // Subscribe to the bounding box topic
     mBoundingBoxesSub = nh.subscribe(topic, 10, &BoundingBoxesInput::BoundingBoxesCallback, this);
 
@@ -48,7 +47,8 @@ void BoundingBoxesInput::BoundingBoxesCallback(sara_msgs::BoundingBoxes3D boundi
             }
             entities.push_back(en);
         } else {
-            ROS_WARN("rejecting an entity of name : %s because it's probability is %lf", en.name.c_str(), en.probability);
+            ROS_WARN("rejecting an entity of name : %s because it's probability is %lf", en.name.c_str(),
+                     en.probability);
         }
     }
 
