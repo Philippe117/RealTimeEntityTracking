@@ -31,7 +31,7 @@ Affiliation: Club étudiant Walking Machine, ÉTS**
 - [Robot Operating System (ROS)](http://wiki.ros.org) (middleware pour la robotique),
 - [sara_msg](https://github.com/WalkingMachine/sara_msgs) (repo pour les messages utilisé par sara),
 - [people](https://github.com/WalkingMachine/people)
-- [Open_cv] (vision artificielle)
+- [Open_cv](vision artificielle)  (Pour les kalman filters)
 
 
 #### Building
