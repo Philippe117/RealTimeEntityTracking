@@ -151,6 +151,8 @@ add_executable(
         src/PerceivedEntity.cpp
         src/EntityTracker.cpp
         src/wm_entity_tracker_node.cpp
+        include/PeopleFaceInput.h
+        src/PeopleFaceInput.cpp
         src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h src/PeopleLegInput.cpp include/PeopleLegInput.h src/BoundingBoxesInput.cpp include/BoundingBoxesInput.h)
 
 
