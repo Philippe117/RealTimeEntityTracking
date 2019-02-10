@@ -78,21 +78,6 @@ Pas de services en ce moment
 
 #### Paramètres
 
-gen.add("", double_t, 0,   "A double parameter",                               .5,     0,   1)
-gen.add("", double_t, 0,      "Maximum possible difference to merge entities.",   1,     0,   1000)
-gen.add("", double_t, 0,              "The importance given to XY coordinates",           1,      0,   10)
-gen.add("", double_t, 0,               "The importance given to Z coordinate",             0.5,    0,   10)
-gen.add("", double_t, 0,     "The importance given to the confidence level",     0.01,    0,   10)
-
-gen.add("", double_t, 0,        "A kalman filter parameter",    0.001,  0.00000001, 1.0)
-gen.add("", double_t, 0,    "A kalman filter parameter",    50,     0.001,     100)
-gen.add("", double_t, 0,           "A kalman filter parameter",    0.9,    0.001,     1)
-
-gen.add("legs_input_processNoiseCov", double_t, 0,        "A kalman filter parameter",    0.000001,  0.00000001, 1.0)
-gen.add("legs_input_measurementNoiseCov", double_t, 0,    "A kalman filter parameter",    10,     0.001,     100)
-gen.add("legs_input_errorCovPost", double_t, 0,           "A kalman filter parameter",    0.1,    0.001,     1)
-
-
 ##### Publisher
 * **`publication_threshold`** (float, default: 0.5)
 
