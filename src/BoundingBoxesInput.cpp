@@ -44,6 +44,7 @@ void BoundingBoxesInput::BoundingBoxesCallback(sara_msgs::BoundingBoxes3D boundi
             // If the entity is a person
             if (en.name.compare("person") == 0) {
                 en.position.z = 0;
+                en.face.boundingBox.Center.z = 1.5;
             }
             entities.push_back(en);
         } else {

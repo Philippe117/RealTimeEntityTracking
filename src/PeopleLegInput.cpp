@@ -29,6 +29,7 @@ void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
         if (legs.reliability > 0) {
             sara_msgs::Entity en;
             en.position = legs.pos;
+            en.face.boundingBox.Center.z = 1.5;
             en.probability = legs.reliability / 2; // TODO fixit
             en.name = "person";
             en.lastUpdateTime = legs.header.stamp;
