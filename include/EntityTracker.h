@@ -32,7 +32,7 @@ class EntityTracker {
 
     // Suggest the addition of new entities to the list.
     void
-    perceiveEntities(std::vector<sara_msgs::Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params);
+    perceiveEntities(std::vector<sara_msgs::Entity> perceivedEntities, bool canCreate, PerceivedEntity::KalmanParams params);
 
     void perceiveEntity(sara_msgs::Entity entity, bool canCreate,
                         PerceivedEntity::KalmanParams params); // Same but for a single entity.
@@ -62,6 +62,8 @@ public:
     void addOutput(EntityOutput &output);
 
     void clearOutputs();
+
+    std::vector<PerceivedEntity> entities() const { return mEntities; };
 };
 
 #endif //WM_ENTITY_TRACKER_ENTITYTRACKER_H

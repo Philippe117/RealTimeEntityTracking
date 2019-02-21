@@ -8,6 +8,7 @@
 #include "CvOutput.h"
 #include "PeopleLegInput.h"
 #include "BoundingBoxesInput.h"
+#include "PeopleFaceInput.h"
 #include <dynamic_reconfigure/server.h>
 #include <RvizOutput.h>
 #include "wm_entity_tracker/wm_entity_trackerConfig.h"
@@ -26,6 +27,7 @@ namespace wm_entity_tracker {
     EntityInput *boundingBoxesInput;
     EntityInput *simulatedinput;
     EntityInput *peopleLegInput;
+    EntityInput *peopleFaceInput;
 }
 
 
@@ -80,7 +82,8 @@ int main(int argc, char **argv) {
 
     boundingBoxesInput = new BoundingBoxesInput(*tracker, nh, "/darknet_ros/bounding_boxes3D");
 //    simulatedinput = new SimulatedInput(*tracker, 10);
-    peopleLegInput = new PeopleLegInput(*tracker, nh, "/people_tracker_measurements");
+    peopleLegInput = new PeopleLegInput(*tracker, nh, "/leg_tracker_measurements");
+    peopleFaceInput = new PeopleFaceInput(*tracker, nh, "/SaraFaceDetector/face");
 
     //cvOutput = new CvOutput(0, 0, 1, 1);
     //tracker->addOutput(*cvOutput);

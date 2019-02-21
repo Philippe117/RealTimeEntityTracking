@@ -59,21 +59,21 @@ void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntit
 }
 
 void
-EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, PerceivedEntity::KalmanParams params) {
+EntityTracker::perceiveEntities(std::vector<Entity> perceivedEntities, bool canCreate, PerceivedEntity::KalmanParams params) {
 
     // Write into all outputs
     for (auto output : mEntitiesOutput) {
-        output->writePerceptions(entities);
+        output->writePerceptions(perceivedEntities);
     }
 
     perceptionMutex.lock();
-    for (auto &perceived : entities) {
+    for (auto &perceived : perceivedEntities) {
         //cout << "prob= " << to_string(perceived.probability) << "\n";
 
         // Initialise the flag that tells if a match has been found.
         bool notFoundYet{true};
 
-        // If the ID is defined, we try to update the corresponting entity.
+        // If the ID is already defined by the input, we try to update the corresponting entity.
         if (perceived.ID != 0) {
             for (auto &entity : mEntities) {
                 if (entity.ID == perceived.ID) {
@@ -83,17 +83,11 @@ EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, Pe
                 }
             }
             if (notFoundYet && canCreate) {
+                notFoundYet = false;
                 addEntity(perceived);
             }
-        } else if (perceived.face.id != "") { // If the face is defined, we look for a match
-            for (auto &entity : mEntities) {
-                if (entity.ID == perceived.ID) {
-                    notFoundYet = false;
-                    entity.mergeOnto(perceived, params);
-                    break;
-                }
-            }
-        } else {
+        }
+        if (notFoundYet) {
             // Use an outside loop to find the closest entity and an inside loop to validate that the match is the best around.
             // The inside loop will stop if there is already a better match.
             float minDiff{maximumDifference()};
@@ -101,16 +95,14 @@ EntityTracker::perceiveEntities(std::vector<Entity> entities, bool canCreate, Pe
             for (auto &entity : mEntities) {
                 auto diff{entity.compareWith(perceived)};
                 if (diff < minDiff) {
-                    float minDiff2{diff};
-                    Entity *closest2{nullptr};
-                    for (auto &perceived2 : entities) {
-                        auto diff2{entity.compareWith(perceived2)};
-                        if (diff2 < minDiff2) {
-                            closest2 = &perceived;
-                            minDiff2 = diff2;
+                    bool closest2{true};
+                    for (auto &perceived2 : perceivedEntities) {
+                        if (entity.compareWith(perceived2) < diff) {
+                            closest2 = false;
+                            break;
                         }
                     }
-                    if (closest2 != &perceived) {
+                    if (closest2) {
                         minDiff = diff;
                         closest = &entity;
                     }

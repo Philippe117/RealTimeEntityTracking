@@ -27,6 +27,7 @@ void PeopleFaceInput::peopleFaceCallback(sara_msgs::Faces faceArray) {
     vector<Entity> entities;
 
     for (auto &face : faceArray.faces) {
+        // Creating a new entity with a face
         sara_msgs::Entity en;
         en.position = face.boundingBox.Center;
         en.position.z = 0;
@@ -35,6 +36,14 @@ void PeopleFaceInput::peopleFaceCallback(sara_msgs::Faces faceArray) {
         en.name = "person";
         en.lastUpdateTime = faceArray.header.stamp;
 
+        // We look for a match in previously detected faces
+        for (auto & entity : tracker().entities()){
+            if (entity.checkFaceID(en.face.id)) {
+                // If a match is found, we force the entity ID.
+                en.ID = entity.ID;
+                break;
+            }
+        }
         entities.push_back(en);
     }
     perceive(entities, true);

@@ -90,6 +90,19 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params) {
     setIdentity(mKF.errorCovPost, cv::Scalar::all(params.errorCovPost));
     mKF.correct(measurement);
 
+    // Add the face if needed
+    //std::cout << source.face.id;
+    if (!source.face.id.empty()){
+        addFaceID(source.face.id );
+        face = source.face;
+    }
+
+    // Move the head
+    face.boundingBox.Center.x = position.x;
+    face.boundingBox.Center.y = position.y;
+    if (face.id.empty()) face.boundingBox.Center.z = position.z;
+
+
     lastUpdateTime = ros::Time::now();
 
     if (probability < source.probability)
@@ -114,7 +127,7 @@ void PerceivedEntity::updateStatus() {
     velocity.z = mKF.statePost.at<float>(5);
 }
 
-bool PerceivedEntity::checkFaceID(int faceID) {
+bool PerceivedEntity::checkFaceID(std::string faceID) {
     for (auto & ID : mAssociatedFaceIDs){
         if (ID == faceID){
             return true;
@@ -123,7 +136,7 @@ bool PerceivedEntity::checkFaceID(int faceID) {
     return false;
 }
 
-bool PerceivedEntity::addFaceID(int faceID) {
+bool PerceivedEntity::addFaceID(std::string faceID) {
     if (!checkFaceID(faceID)){
         mAssociatedFaceIDs.push_back(faceID);
     }
