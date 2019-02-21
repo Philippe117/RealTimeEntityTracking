@@ -29,6 +29,20 @@ void RvizOutput::writeEntities(const vector<Entity> &entities) {
     m.color.b = 0.1;
     m.color.a = 0.5;
 
+    visualization_msgs::Marker face;
+    face.header.stamp = ros::Time::now();
+    face.lifetime = ros::Duration(0.5);
+    face.header.frame_id = "/map";
+    face.ns = "face";
+    face.type = m.SPHERE;
+    face.scale.x = 0.15;
+    face.scale.y = 0.15;
+    face.scale.z = 0.15;
+    face.color.r = 0.1;
+    face.color.g = 0.1;
+    face.color.b = 0.1;
+    face.color.a = 0.4;
+
     visualization_msgs::Marker nametag;
     nametag.header.stamp = ros::Time::now();
     nametag.lifetime = ros::Duration(0.5);
@@ -79,6 +93,13 @@ void RvizOutput::writeEntities(const vector<Entity> &entities) {
         idTag.pose.position.y = entity.position.y;
         idTag.pose.position.z = entity.position.z + 0.10;
         markerPublisher.publish(idTag);
+
+        face.id = entity.ID;
+        face.text = std::to_string(entity.ID);
+        face.pose.position.x = entity.face.boundingBox.Center.x;
+        face.pose.position.y = entity.face.boundingBox.Center.y;
+        face.pose.position.z = entity.face.boundingBox.Center.z;
+        markerPublisher.publish(face);
     }
 }
 
