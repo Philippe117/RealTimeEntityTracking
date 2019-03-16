@@ -24,11 +24,11 @@ PeopleFaceInput::~PeopleFaceInput() {
 }
 
 void PeopleFaceInput::peopleFaceCallback(sara_msgs::Faces faceArray) {
-    vector<Entity> entities;
+    vector<PerceivedEntity> entities;
 
     for (auto &face : faceArray.faces) {
         // Creating a new entity with a face
-        sara_msgs::Entity en;
+        PerceivedEntity en;
         en.position = face.boundingBox.Center;
         en.position.z = 0;
         en.face = face;

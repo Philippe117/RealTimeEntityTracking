@@ -23,7 +23,7 @@ PeopleLegInput::~PeopleLegInput() {
 }
 
 void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
-    vector<Entity> entities;
+    vector<PerceivedEntity> entities;
 
     for (auto legs : legArray.people) {
         if (legs.reliability > 0) {

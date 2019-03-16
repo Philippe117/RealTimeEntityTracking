@@ -34,7 +34,7 @@ CvOutput::CvOutput(float minX, float minY, float maxX, float maxY)
 }
 
 
-void CvOutput::writeEntities(const vector<Entity> &entities) {
+void CvOutput::writeEntities(const vector<PerceivedEntity> &entities) {
 
     for (auto &entity : entities) {
         adaptScreen(entity);
@@ -57,7 +57,7 @@ void CvOutput::writeEntities(const vector<Entity> &entities) {
     waitKey(10);
 }
 
-void CvOutput::writePerceptions(const vector<Entity> &entities) {
+void CvOutput::writePerceptions(const vector<PerceivedEntity> &entities) {
     for (auto &entity : entities) {
         adaptScreen(entity);
         Point myEntity(rescaleX(entity.position.x), rescaleY(entity.position.y));
@@ -66,7 +66,7 @@ void CvOutput::writePerceptions(const vector<Entity> &entities) {
     cv::putText(img, "perceptions = " + to_string(entities.size()), Point(20, 50), FONT_HERSHEY_COMPLEX, 1, 255);
 }
 
-void CvOutput::adaptScreen(const Entity &entity) {
+void CvOutput::adaptScreen(const PerceivedEntity &entity) {
     try {
         mMinX = min(float(entity.position.x) - 20 / mScalingX, mMinX);
         mMinY = min(float(entity.position.y) - 20 / mScalingY, mMinY);

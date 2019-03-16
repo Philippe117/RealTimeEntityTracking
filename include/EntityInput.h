@@ -6,7 +6,7 @@
 #define PROJECT_ENTITYINPUT_H
 
 #include <vector>
-#include "sara_msgs/Entity.h"
+#include "PerceivedEntity.h"
 #include "EntityTracker.h"
 
 // Classe parent pour toutes les entrées possible d'un tracker.
@@ -16,9 +16,9 @@ class EntityInput {
 public:
     EntityInput(EntityTracker &tracker) : mTracker{tracker} {};
 
-    EntityTracker &tracker() { return mTracker; }
+    EntityTracker &tracker() const { return mTracker; }
 
-    void perceive(std::vector<sara_msgs::Entity> &entities, bool canCreate) {
+    void perceive(std::vector<PerceivedEntity> &entities, bool canCreate) {
         tracker().perceiveEntities(entities, canCreate, mKalmanParams);
     }
 

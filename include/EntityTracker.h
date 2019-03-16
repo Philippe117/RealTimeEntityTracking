@@ -25,16 +25,16 @@ class EntityTracker {
     void deleteDeads();
 
     // Add an entity to the list and assing a procedural ID.
-    void addEntity(sara_msgs::Entity &entity);
+    void addEntity(PerceivedEntity &entity);
 
     // Give privileges to EntityInput class so it can call perceptions.
     friend class EntityInput;
 
     // Suggest the addition of new entities to the list.
     void
-    perceiveEntities(std::vector<sara_msgs::Entity> perceivedEntities, bool canCreate, PerceivedEntity::KalmanParams params);
+    perceiveEntities(std::vector<PerceivedEntity> perceivedEntities, bool canCreate, PerceivedEntity::KalmanParams params);
 
-    void perceiveEntity(sara_msgs::Entity entity, bool canCreate,
+    void perceiveEntity(PerceivedEntity entity, bool canCreate,
                         PerceivedEntity::KalmanParams params); // Same but for a single entity.
 
     std::mutex perceptionMutex;

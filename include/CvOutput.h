@@ -7,7 +7,7 @@
 
 #include "EntityOutput.h"
 #include <vector>
-#include "sara_msgs/Entity.h"
+#include "PerceivedEntity.h"
 #include "opencv2/highgui/highgui.hpp"
 
 #define SCREENSIZEX 800
@@ -21,16 +21,16 @@ class CvOutput : public EntityOutput {
     float mScalingX;
     float mScalingY;
 
-    void adaptScreen(const sara_msgs::Entity &entity);
+    void adaptScreen(const PerceivedEntity &entity);
 
 public:
     CvOutput(float minX = -10, float minY = -10, float maxX = 10, float maxY = 10);
 
     ~CvOutput() override;
 
-    void writeEntities(const std::vector<sara_msgs::Entity> &entities) override;
+    void writeEntities(const std::vector<PerceivedEntity> &entities) override;
 
-    void writePerceptions(const std::vector<sara_msgs::Entity> &entities) override;
+    void writePerceptions(const std::vector<PerceivedEntity> &entities) override;
 
 };
 

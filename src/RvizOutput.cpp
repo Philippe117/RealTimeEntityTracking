@@ -16,7 +16,7 @@ RvizOutput::RvizOutput(ros::NodeHandle &nh) {
 }
 
 
-void RvizOutput::writeEntities(const vector<Entity> &entities) {
+void RvizOutput::writeEntities(const vector<PerceivedEntity> &entities) {
     visualization_msgs::Marker m;
     m.header.stamp = ros::Time::now();
     m.lifetime = ros::Duration(0.5);
@@ -124,7 +124,7 @@ void RvizOutput::writeEntities(const vector<Entity> &entities) {
 }
 
 
-void RvizOutput::writePerceptions(const vector<Entity> &entities) {
+void RvizOutput::writePerceptions(const vector<PerceivedEntity> &entities) {
 
     visualization_msgs::Marker m;
     m.header.stamp = ros::Time::now();

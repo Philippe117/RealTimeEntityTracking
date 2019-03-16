@@ -6,7 +6,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include "opencv2/highgui/highgui.hpp"
-#include "sara_msgs/Entity.h"
+#include "PerceivedEntity.h"
 
 using namespace sara_msgs;
 using namespace cv;
@@ -16,10 +16,10 @@ SimulatedInput::SimulatedInput(EntityTracker &tracker, int quantity)
         : EntityInput(tracker),
           mTread(&SimulatedInput::run, this){
     for (int i{0}; i<quantity; ++i){
-            Entity en;
-            en.position.x = 300;
-            en.position.y = 300;
-            input.push_back(en);
+        PerceivedEntity en;
+        en.position.x = 300;
+        en.position.y = 300;
+        input.push_back(en);
     }
 }
 
@@ -48,7 +48,7 @@ void *SimulatedInput::run() {
             }
         }
 
-        vector<Entity> en;
+        vector<PerceivedEntity> en;
         for (auto &in : input) {
             if (rng.uniform(0., 1.) > 0.5){
                 en.push_back(in);

@@ -4,7 +4,6 @@
 
 #include "PerceivedEntity.h"
 
-using namespace sara_msgs;
 using namespace cv;
 
 float PerceivedEntity::mXYWeight = 1.0;
@@ -46,7 +45,7 @@ PerceivedEntity::~PerceivedEntity() {
     mAssociatedFaceIDs.clear();
 }
 
-float PerceivedEntity::compareWith(const Entity &en) const {
+float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
 
     // Obtain the distance on each axis.
     float dX{float(position.x - en.position.x)};
@@ -75,7 +74,7 @@ float PerceivedEntity::compareWith(const Entity &en) const {
 
 }
 
-void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params) {
+void PerceivedEntity::mergeOnto(PerceivedEntity &source, KalmanParams params) {
 
     // Update the filter.
     mKF.predict();

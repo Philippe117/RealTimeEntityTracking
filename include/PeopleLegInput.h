@@ -9,7 +9,6 @@
 #include "ros/ros.h"
 #include "people_msgs/PositionMeasurementArray.h"
 #include <vector>
-#include "sara_msgs/Entity.h"
 
 class PeopleLegInput : public EntityInput {
     ros::NodeHandle mNodeHandle;

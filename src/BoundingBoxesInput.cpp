@@ -6,7 +6,6 @@
 
 
 using namespace std;
-using namespace sara_msgs;
 
 
 BoundingBoxesInput::BoundingBoxesInput(EntityTracker &tracker, ros::NodeHandle &nh, const string topic)
@@ -28,12 +27,12 @@ BoundingBoxesInput::~BoundingBoxesInput() {
 void BoundingBoxesInput::BoundingBoxesCallback(sara_msgs::BoundingBoxes3D boundingBoxes3D) {
 
 
-    vector<Entity> entities;
+    vector<PerceivedEntity> entities;
 
     // Create the entities from the bounding boxes
     for (auto &boundingBox : boundingBoxes3D.boundingBoxes) {
 
-        sara_msgs::Entity en;
+        PerceivedEntity en;
         en.BoundingBox = boundingBox;
         en.name = boundingBox.Class;
         en.position = boundingBox.Center;

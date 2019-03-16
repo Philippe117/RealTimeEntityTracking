@@ -8,7 +8,6 @@
 #include "EntityInput.h"
 #include "ros/ros.h"
 #include <vector>
-#include "sara_msgs/Entity.h"
 #include "sara_msgs/BoundingBoxes3D.h"
 #include <string>
 

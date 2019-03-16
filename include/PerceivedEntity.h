@@ -58,10 +58,10 @@ public:
     ~PerceivedEntity();
 
     // Allow to obtain the weighted difference between two entities
-    float compareWith(const sara_msgs::Entity &en) const;
+    float compareWith(const PerceivedEntity &en) const;
 
     // Merge an PerceivedEntity onto this one
-    void mergeOnto(sara_msgs::Entity &source, KalmanParams params);
+    void mergeOnto(PerceivedEntity &source, KalmanParams params);
 
     // Update the status of the Entity
     void update(const ros::Duration deltaTime);

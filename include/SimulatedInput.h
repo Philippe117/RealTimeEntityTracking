@@ -13,9 +13,7 @@ class SimulatedInput : public EntityInput {
 
     void *run();
 
-    std::vector<sara_msgs::Entity> input;
-
-//    void perceive( std::vector<sara_msgs::Entity>& entities ) override ;
+    std::vector<PerceivedEntity> input;
 
 public:
     SimulatedInput(EntityTracker &tracker, int quantity);

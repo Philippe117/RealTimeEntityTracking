@@ -7,7 +7,6 @@
 
 #include "EntityOutput.h"
 #include <vector>
-#include "sara_msgs/Entity.h"
 #include <ros/ros.h>
 #include "PerceivedEntity.h"
 
@@ -20,9 +19,9 @@ public:
 
     ~RvizOutput() override;
 
-    void writeEntities(const std::vector<sara_msgs::Entity> &entities) override;
+    void writeEntities(const std::vector<PerceivedEntity> &entities) override;
 
-    void writePerceptions(const std::vector<sara_msgs::Entity> &entities) override;
+    void writePerceptions(const std::vector<PerceivedEntity> &entities) override;
 
 };
 

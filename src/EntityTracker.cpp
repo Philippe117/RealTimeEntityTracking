@@ -4,7 +4,6 @@
 #include "EntityTracker.h"
 
 using namespace std;
-using namespace sara_msgs;
 
 EntityTracker::EntityTracker() : mNextID{1} {
     perceptionMutex.unlock();
@@ -29,10 +28,10 @@ void EntityTracker::update(ros::Duration deltaTime) {
         entity.update(deltaTime);
     }
 
-    vector<Entity> entities;
+    vector<PerceivedEntity> entities;
     for (auto &entity : mEntities) {
         if (entity.probability > publicationTreashold())
-            entities.push_back(Entity(entity));
+            entities.push_back(entity);
     }
 
     // Write into all outputs
@@ -50,16 +49,16 @@ void EntityTracker::deleteDeads() {
     mEntities.erase(std::remove_if(mEntities.begin(), mEntities.end(), entityIsDead), mEntities.end());
 }
 
-void EntityTracker::perceiveEntity(Entity entity, bool canCreate, PerceivedEntity::KalmanParams params) {
+void EntityTracker::perceiveEntity(PerceivedEntity entity, bool canCreate, PerceivedEntity::KalmanParams params) {
 
     // Create a list of entities to call perceiveEntities.
-    vector<Entity> entities;
+    vector<PerceivedEntity> entities;
     entities.push_back(entity);
     return perceiveEntities(entities, canCreate, params);
 }
 
 void
-EntityTracker::perceiveEntities(std::vector<Entity> perceivedEntities, bool canCreate, PerceivedEntity::KalmanParams params) {
+EntityTracker::perceiveEntities(std::vector<PerceivedEntity> perceivedEntities, bool canCreate, PerceivedEntity::KalmanParams params) {
 
     // Write into all outputs
     for (auto output : mEntitiesOutput) {
@@ -123,15 +122,13 @@ EntityTracker::perceiveEntities(std::vector<Entity> perceivedEntities, bool canC
 }
 
 
-void EntityTracker::addEntity(Entity &newEntity) {
-
-    PerceivedEntity entity{PerceivedEntity(newEntity)};
+void EntityTracker::addEntity(PerceivedEntity &newEntity) {
 
     // Initialise the ID if needed.
-    if (entity.ID == 0) entity.ID = mNextID++;
+    if (newEntity.ID == 0) newEntity.ID = mNextID++;
 
-    entity.probability *= 0.1;  // TODO ajouter paramètre
-    mEntities.push_back(entity);
+    newEntity.probability *= 0.1;  // TODO ajouter paramètre
+    mEntities.push_back(newEntity);
     return;
 }
 

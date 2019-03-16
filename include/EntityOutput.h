@@ -6,7 +6,7 @@
 #define PROJECT_ENTITYOUTPUT_H
 
 #include <vector>
-#include "sara_msgs/Entity.h"
+#include "PerceivedEntity.h"
 
 class EntityOutput {
 public:
@@ -14,9 +14,9 @@ public:
 
     virtual ~EntityOutput() = default;
 
-    virtual void writeEntities(const std::vector<sara_msgs::Entity> &entities)= 0;
+    virtual void writeEntities(const std::vector<PerceivedEntity> &entities)= 0;
 
-    virtual void writePerceptions(const std::vector<sara_msgs::Entity> &perceptions)= 0;
+    virtual void writePerceptions(const std::vector<PerceivedEntity> &perceptions)= 0;
 };
 
 
