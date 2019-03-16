@@ -52,13 +52,19 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
     params.errorCovPost = config.legs_input_errorCovPost;
     peopleLegInput->setKalmanParams(params);
 
+    // Set the kalman parameters for the tracker
+    params.processNoiseCov = config.face_input_processNoiseCov;
+    params.measurementNoiseCov = config.face_input_measurementNoiseCov;
+    params.errorCovPost = config.face_input_errorCovPost;
+    peopleFaceInput->setKalmanParams(params);
+
     tracker->setPublicationTreashold(config.publication_threshold);
     tracker->setMaximumDifference(config.maximum_difference);
     PerceivedEntity::setXYWeight(config.weights_XY);
     PerceivedEntity::setZWeight(config.weights_Z);
     PerceivedEntity::setProbabilityWeight(config.weights_probability);
 
-    cout << "reconfiguration\n"\
+    cout << "=== Eeconfiguration ===\n"\
          << "tracker->XY_weight=" << PerceivedEntity::xYWeight() << "\n"\
          << "tracker->Y_weight=" << PerceivedEntity::zWeight() << "\n"\
          << "boundingBoxesInput->processNoiseCov=" << boundingBoxesInput->kalmanParams().processNoiseCov << "\n"\
@@ -67,7 +73,10 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
          << "boundingBoxesInput->errorCovPost=" << boundingBoxesInput->kalmanParams().errorCovPost << "\n"\
          << "peopleLegInput->processNoiseCov=" << peopleLegInput->kalmanParams().processNoiseCov << "\n"\
          << "peopleLegInput->measurementNoiseCov=" << peopleLegInput->kalmanParams().measurementNoiseCov << "\n"\
-         << "peopleLegInput->errorCovPost=" << peopleLegInput->kalmanParams().errorCovPost << "\n";
+         << "peopleLegInput->errorCovPost=" << peopleLegInput->kalmanParams().errorCovPost << "\n"\
+         << "peopleFaceInput->processNoiseCov=" << peopleFaceInput->kalmanParams().processNoiseCov << "\n"\
+         << "peopleFaceInput->measurementNoiseCov=" << peopleFaceInput->kalmanParams().measurementNoiseCov << "\n"\
+         << "peopleFaceInput->errorCovPost=" << peopleFaceInput->kalmanParams().errorCovPost << "\n";
 
 }
 
@@ -82,7 +91,7 @@ int main(int argc, char **argv) {
 
     boundingBoxesInput = new BoundingBoxesInput(*tracker, nh, "/darknet_ros/bounding_boxes3D");
 //    simulatedinput = new SimulatedInput(*tracker, 10);
-    peopleLegInput = new PeopleLegInput(*tracker, nh, "/leg_tracker_measurements");
+    peopleLegInput = new PeopleLegInput(*tracker, nh, "/people_tracker_measurements");
     peopleFaceInput = new PeopleFaceInput(*tracker, nh, "/SaraFaceDetector/face");
 
     //cvOutput = new CvOutput(0, 0, 1, 1);

@@ -19,6 +19,7 @@ class PerceivedEntity : public sara_msgs::Entity {
     static float mZWeight;
     static float mProbabilityWeight;
     std::vector<std::string> mAssociatedFaceIDs;
+    std::vector<std::string> mAssociatedLegsIDs;
 
 public:
     struct KalmanParams {
@@ -28,9 +29,9 @@ public:
     };
 
     // Constructors and destructor.
-    PerceivedEntity(float x, float y, float z, std::string name = "");
+    PerceivedEntity(float x=0, float y=0, float z=0, std::string name = "");
 
-    PerceivedEntity(sara_msgs::Entity &entity) :
+    PerceivedEntity(const sara_msgs::Entity &entity) :
             PerceivedEntity(entity.position.x, entity.position.y, entity.position.z, entity.name) {
         probability = entity.probability;
         size = entity.size;
@@ -47,6 +48,11 @@ public:
         BoundingBox = entity.BoundingBox;
         aliases = entity.aliases;
         lastUpdateTime = entity.lastUpdateTime;
+    }
+    PerceivedEntity(const PerceivedEntity& entity) :
+            PerceivedEntity(static_cast<sara_msgs::Entity>(entity)) {
+        mAssociatedFaceIDs = entity.associatedFaceIDs();
+        mAssociatedLegsIDs = entity.associatedLegsIDs();
     }
 
     ~PerceivedEntity();
@@ -76,10 +82,19 @@ public:
 
     static void setProbabilityWeight(float value) { mProbabilityWeight = value; }
 
-    // Verify if a faceID is in the list  of associated faceIDs.
+    // Verify if a faceID is in the list of associated faceIDs.
     bool checkFaceID(std::string faceID);
     // Add a faceID to the list of associated faceIDs. Return true if the face already exist in the list.
     bool addFaceID(std::string faceID);
+    bool addFaceID(std::vector<std::string> faceIDs);
+    std::vector<std::string> associatedFaceIDs() const { return mAssociatedFaceIDs; }
+
+    // Verify if a legsID is in the list of associated faceIDs.
+    bool checkLegsID(std::string legsID);
+    // Add a legsID to the list of associated legsIDs. Return true if the face already exist in the list.
+    bool addLegsID(std::string legsID);
+    bool addLegsID(std::vector<std::string> legsIDs);
+    std::vector<std::string> associatedLegsIDs() const { return mAssociatedLegsIDs; }
 };
 
 

@@ -27,10 +27,21 @@ void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
 
     for (auto legs : legArray.people) {
         if (legs.reliability > 0) {
-            sara_msgs::Entity en;
+            PerceivedEntity en;
+
+            // We look for a match in previously detected legs
+            for (auto & entity : tracker().entities()){
+                if (entity.checkLegsID(legs.object_id)) {
+                    // If a match is found, we force the entity ID.
+                    en.ID = entity.ID;
+                    break;
+                }
+            }
+
+
             en.position = legs.pos;
             en.face.boundingBox.Center.z = 1.5;
-            en.probability = legs.reliability / 2; // TODO fixit
+            en.probability = legs.reliability * 0.25; // TODO fixit
             en.name = "person";
             en.lastUpdateTime = legs.header.stamp;
 

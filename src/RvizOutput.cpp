@@ -43,6 +43,20 @@ void RvizOutput::writeEntities(const vector<Entity> &entities) {
     face.color.b = 0.1;
     face.color.a = 0.4;
 
+    visualization_msgs::Marker faceID;
+    faceID.header.stamp = ros::Time::now();
+    faceID.lifetime = ros::Duration(0.5);
+    faceID.header.frame_id = "/map";
+    faceID.ns = "faceID";
+    faceID.type = faceID.TEXT_VIEW_FACING;
+    faceID.scale.x = 0.06;
+    faceID.scale.y = 0.06;
+    faceID.scale.z = 0.06;
+    faceID.color.r = 1;
+    faceID.color.g = 1;
+    faceID.color.b = 0.0;
+    faceID.color.a = 1;
+    
     visualization_msgs::Marker nametag;
     nametag.header.stamp = ros::Time::now();
     nametag.lifetime = ros::Duration(0.5);
@@ -95,11 +109,17 @@ void RvizOutput::writeEntities(const vector<Entity> &entities) {
         markerPublisher.publish(idTag);
 
         face.id = entity.ID;
-        face.text = std::to_string(entity.ID);
         face.pose.position.x = entity.face.boundingBox.Center.x;
         face.pose.position.y = entity.face.boundingBox.Center.y;
         face.pose.position.z = entity.face.boundingBox.Center.z;
         markerPublisher.publish(face);
+
+        faceID.id = entity.ID;
+        faceID.text = entity.face.id.c_str();
+        faceID.pose.position.x = entity.face.boundingBox.Center.x;
+        faceID.pose.position.y = entity.face.boundingBox.Center.y;
+        faceID.pose.position.z = entity.face.boundingBox.Center.z+0.1;
+        markerPublisher.publish(faceID);
     }
 }
 

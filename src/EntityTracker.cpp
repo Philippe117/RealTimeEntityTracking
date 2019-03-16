@@ -74,7 +74,7 @@ EntityTracker::perceiveEntities(std::vector<Entity> perceivedEntities, bool canC
         bool notFoundYet{true};
 
         // If the ID is already defined by the input, we try to update the corresponting entity.
-        if (perceived.ID != 0) {
+        if (perceived.probability == 1 && perceived.ID != 0) {
             for (auto &entity : mEntities) {
                 if (entity.ID == perceived.ID) {
                     notFoundYet = false;

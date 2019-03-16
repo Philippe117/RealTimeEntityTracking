@@ -9,6 +9,7 @@
 #include <vector>
 #include "sara_msgs/Entity.h"
 #include <ros/ros.h>
+#include "PerceivedEntity.h"
 
 class RvizOutput : public EntityOutput {
 

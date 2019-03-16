@@ -42,6 +42,8 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name) :
 }
 
 PerceivedEntity::~PerceivedEntity() {
+    mAssociatedLegsIDs.clear();
+    mAssociatedFaceIDs.clear();
 }
 
 float PerceivedEntity::compareWith(const Entity &en) const {
@@ -57,14 +59,17 @@ float PerceivedEntity::compareWith(const Entity &en) const {
     // Initialise the difference.
     float difference{0.0f};
 
-    // Prend compte des probabilitées
-    difference += probability > 0 ? probabilityWeight() / probability : 100000;  // TODO Utiliser un paramêtre de weight
-    difference +=
-            en.probability > 0 ? probabilityWeight() / en.probability : 100000;  // TODO Utiliser un paramêtre de weight
 
-    if (name.compare(en.name) != 0) difference += 100000;
+    if (ID != en.ID) {
+        // Prend compte des probabilitées
+        difference +=
+                probability > 0 ? probabilityWeight() / probability : 100000;  // TODO Utiliser un paramêtre de weight
+        difference +=
+                en.probability > 0 ? probabilityWeight() / en.probability
+                                   : 100000;  // TODO Utiliser un paramêtre de weight
 
-    // TODO Compare the two Entities using the weighted difference.
+        if (name.compare(en.name) != 0) difference += 100000;
+    }
 
     return distance + difference;
 
@@ -91,10 +96,14 @@ void PerceivedEntity::mergeOnto(Entity &source, KalmanParams params) {
     mKF.correct(measurement);
 
     // Add the face if needed
-    //std::cout << source.face.id;
-    if (!source.face.id.empty()){
-        addFaceID(source.face.id );
+    if (!source.associatedFaceIDs().size()){
+        addFaceID(source.associatedFaceIDs() );
         face = source.face;
+    }
+
+    // Add the legs if needed
+    if (!source.associatedLegsIDs().size()){
+        addLegsID(source.associatedLegsIDs() );
     }
 
     // Move the head
@@ -139,6 +148,36 @@ bool PerceivedEntity::checkFaceID(std::string faceID) {
 bool PerceivedEntity::addFaceID(std::string faceID) {
     if (!checkFaceID(faceID)){
         mAssociatedFaceIDs.push_back(faceID);
+    }
+    return true;
+}
+
+bool PerceivedEntity::addFaceID(std::vector<std::string> faceIDs) {
+    for (auto &id : faceIDs){
+        addFaceID(id);
+    }
+    return true;
+}
+
+bool PerceivedEntity::checkLegsID(std::string faceID) {
+    for (auto & ID : mAssociatedFaceIDs){
+        if (ID == faceID){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PerceivedEntity::addLegsID(std::string legsID) {
+    if (!checkLegsID(legsID)){
+        mAssociatedLegsIDs.push_back(legsID);
+    }
+    return true;
+}
+
+bool PerceivedEntity::addLegsID(std::vector<std::string> legsIDs) {
+    for (auto &id : legsIDs){
+        addLegsID(id);
     }
     return true;
 }
