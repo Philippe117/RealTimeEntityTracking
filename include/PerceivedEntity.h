@@ -51,8 +51,8 @@ public:
     }
     PerceivedEntity(const PerceivedEntity& entity) :
             PerceivedEntity(static_cast<sara_msgs::Entity>(entity)) {
-        mAssociatedFaceIDs = entity.associatedFaceIDs();
-        mAssociatedLegsIDs = entity.associatedLegsIDs();
+        mAssociatedFaceIDs = entity.mAssociatedFaceIDs;
+        mAssociatedLegsIDs = entity.mAssociatedLegsIDs;
     }
 
     ~PerceivedEntity();

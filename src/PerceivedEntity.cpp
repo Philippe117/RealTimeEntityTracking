@@ -38,6 +38,7 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name) :
     mKF.statePost.at<float>(2) = z;
 
     lastUpdateTime = ros::Time::now();
+    updateStatus();
 }
 
 PerceivedEntity::~PerceivedEntity() {

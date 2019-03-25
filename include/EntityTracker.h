@@ -63,7 +63,12 @@ public:
 
     void clearOutputs();
 
-    std::vector<PerceivedEntity> entities() const { return mEntities; };
+    std::vector<PerceivedEntity> entities() {
+        perceptionMutex.lock();
+        auto out{mEntities};
+        perceptionMutex.unlock();
+        return out;
+    };
 };
 
 #endif //WM_ENTITY_TRACKER_ENTITYTRACKER_H
