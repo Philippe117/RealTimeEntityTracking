@@ -96,13 +96,13 @@ void PerceivedEntity::mergeOnto(PerceivedEntity &source, KalmanParams params) {
     mKF.correct(measurement);
 
     // Add the face if needed
-    if (!source.associatedFaceIDs().size()){
+    if (source.associatedFaceIDs().size()){
         addFaceID(source.associatedFaceIDs() );
         face = source.face;
     }
 
     // Add the legs if needed
-    if (!source.associatedLegsIDs().size()){
+    if (source.associatedLegsIDs().size()){
         addLegsID(source.associatedLegsIDs() );
     }
 
@@ -159,9 +159,9 @@ bool PerceivedEntity::addFaceID(std::vector<std::string> faceIDs) {
     return true;
 }
 
-bool PerceivedEntity::checkLegsID(std::string faceID) {
-    for (auto & ID : mAssociatedFaceIDs){
-        if (ID == faceID){
+bool PerceivedEntity::checkLegsID(std::string legID) {
+    for (auto & ID : mAssociatedLegsIDs){
+        if (ID == legID){
             return true;
         }
     }

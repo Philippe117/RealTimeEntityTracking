@@ -38,7 +38,7 @@ void PeopleLegInput::peopleLegCallback(PositionMeasurementArray legArray) {
                 }
             }
 
-
+            en.addLegsID(legs.object_id);
             en.position = legs.pos;
             en.face.boundingBox.Center.z = 1.5;
             en.probability = legs.reliability * 0.25; // TODO fixit

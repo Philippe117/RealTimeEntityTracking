@@ -32,6 +32,7 @@ void PeopleFaceInput::peopleFaceCallback(sara_msgs::Faces faceArray) {
         en.position = face.boundingBox.Center;
         en.position.z = 0;
         en.face = face;
+        en.addFaceID(face.id);
         en.probability = 1;
         en.name = "person";
         en.lastUpdateTime = faceArray.header.stamp;
