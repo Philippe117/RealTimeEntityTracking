@@ -11,6 +11,7 @@
 #include "PeopleFaceInput.h"
 #include <dynamic_reconfigure/server.h>
 #include <RvizOutput.h>
+#include "TopicOutput.h"
 #include "wm_entity_tracker/wm_entity_trackerConfig.h"
 
 #define drawCross(center, color, d) \
@@ -98,6 +99,8 @@ int main(int argc, char **argv) {
     //tracker->addOutput(*cvOutput);
     rvizOutput = new RvizOutput(nh);
     tracker->addOutput(*rvizOutput);
+    topicOutput = new TopicOutput(nh, "entities");
+    tracker->addOutput(*topicOutput);
 
 
     // Configure the dynamic reconfigure thigny

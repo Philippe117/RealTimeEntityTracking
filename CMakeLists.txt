@@ -143,17 +143,26 @@ include_directories(
 add_executable(
         ${PROJECT_NAME}_node
         include/RvizOutput.h
-        src/RvizOutput.cpp
+        include/BoundingBoxesInput.h
+        include/CvOutput.h
         include/EntityInput.h
         include/EntityOutput.h
+        include/TopicOutput.h
         include/EntityTracker.h
-        include/PerceivedEntity.h
-        src/PerceivedEntity.cpp
-        src/EntityTracker.cpp
-        src/wm_entity_tracker_node.cpp
         include/PeopleFaceInput.h
+        include/PeopleLegInput.h
+        include/PerceivedEntity.h
+        include/SimulatedInput.h
+        src/BoundingBoxesInput.cpp
+        src/CvOutput.cpp
+        src/TopicOutput.cpp
+        src/EntityTracker.cpp
         src/PeopleFaceInput.cpp
-        src/SimulatedInput.cpp include/SimulatedInput.h src/CvOutput.cpp include/CvOutput.h src/PeopleLegInput.cpp include/PeopleLegInput.h src/BoundingBoxesInput.cpp include/BoundingBoxesInput.h)
+        src/PeopleLegInput.cpp
+        src/PerceivedEntity.cpp
+        src/RvizOutput.cpp
+        src/SimulatedInput.cpp
+        src/wm_entity_tracker_node.cpp)
 
 
 ## Rename C++ executable without prefix
