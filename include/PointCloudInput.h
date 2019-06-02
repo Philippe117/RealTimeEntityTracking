@@ -2,8 +2,8 @@
 // Created by philippe on 11/11/18.
 //
 
-#ifndef PROJECT_BOUNDINGBOXESINPUT_H
-#define PROJECT_BOUNDINGBOXESINPUT_H
+#ifndef PROJECT_POINTCLOUDINPUT_H
+#define PROJECT_POINTCLOUDINPUT_H
 
 #include "EntityInput.h"
 #include "ros/ros.h"
@@ -23,4 +23,4 @@ public:
 };
 
 
-#endif //PROJECT_BOUNDINGBOXESINPUT_H
+#endif //PROJECT_POINTCLOUDINPUT_H

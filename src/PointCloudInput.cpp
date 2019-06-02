@@ -37,7 +37,7 @@ void PointCloudInput::PointCloudCallback(sara_msgs::PointClouds PCs) {
         en.pointcloud = PC.pointCloud;
         en.position = PC.boundingBox.Center;
         en.name = "unknown";
-        en.probability = 0.5;
+        en.probability = 0.8;
         en.lastUpdateTime = PCs.header.stamp;
 
         if (en.probability > 0) {

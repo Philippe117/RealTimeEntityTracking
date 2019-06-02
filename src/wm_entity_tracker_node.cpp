@@ -13,6 +13,7 @@
 #include <RvizOutput.h>
 #include "TopicOutput.h"
 #include "wm_entity_tracker/wm_entity_trackerConfig.h"
+#include "PointCloudInput.h"
 
 #define drawCross(center, color, d) \
 line( img, Point( center.x - d, center.y - d ), Point( center.x + d, center.y + d ), color, 2, CV_AA, 0); \
@@ -29,6 +30,7 @@ namespace wm_entity_tracker {
     EntityInput *simulatedinput;
     EntityInput *peopleLegInput;
     EntityInput *peopleFaceInput;
+    EntityInput *pointCloudInput;
 }
 
 
@@ -59,6 +61,12 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
     params.errorCovPost = config.face_input_errorCovPost;
     peopleFaceInput->setKalmanParams(params);
 
+    // Set the kalman parameters for the tracker
+    params.processNoiseCov = config.pointcloud_input_processNoiseCov;
+    params.measurementNoiseCov = config.pointcloud_input_measurementNoiseCov;
+    params.errorCovPost = config.pointcloud_input_errorCovPost;
+    pointCloudInput->setKalmanParams(params);
+
     tracker->setPublicationTreashold(config.publication_threshold);
     tracker->setMaximumDifference(config.maximum_difference);
     PerceivedEntity::setXYWeight(config.weights_XY);
@@ -77,7 +85,10 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
          << "peopleLegInput->errorCovPost=" << peopleLegInput->kalmanParams().errorCovPost << "\n"\
          << "peopleFaceInput->processNoiseCov=" << peopleFaceInput->kalmanParams().processNoiseCov << "\n"\
          << "peopleFaceInput->measurementNoiseCov=" << peopleFaceInput->kalmanParams().measurementNoiseCov << "\n"\
-         << "peopleFaceInput->errorCovPost=" << peopleFaceInput->kalmanParams().errorCovPost << "\n";
+         << "peopleFaceInput->errorCovPost=" << peopleFaceInput->kalmanParams().errorCovPost << "\n"
+         << "PointCloudInput->processNoiseCov=" << peopleFaceInput->kalmanParams().processNoiseCov << "\n"\
+         << "PointCloudInput->measurementNoiseCov=" << peopleFaceInput->kalmanParams().measurementNoiseCov << "\n"\
+         << "PointCloudInput->errorCovPost=" << peopleFaceInput->kalmanParams().errorCovPost << "\n";
 
 }
 
@@ -94,6 +105,7 @@ int main(int argc, char **argv) {
 //    simulatedinput = new SimulatedInput(*tracker, 10);
     peopleLegInput = new PeopleLegInput(*tracker, nh, "/people_tracker_measurements");
     peopleFaceInput = new PeopleFaceInput(*tracker, nh, "/SaraFaceDetector/face");
+    pointCloudInput = new PointCloudInput(*tracker, nh, "/unknown_objects/segmented_pointclouds/listed");
 
     //cvOutput = new CvOutput(0, 0, 1, 1);
     //tracker->addOutput(*cvOutput);
