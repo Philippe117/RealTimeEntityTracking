@@ -106,6 +106,10 @@ void PerceivedEntity::mergeOnto(PerceivedEntity &source, KalmanParams params) {
         addLegsID(source.associatedLegsIDs() );
     }
 
+    if (source.lastUpdateTime > lastUpdateTime && source.pointcloud.header.stamp != ros::Time(0)){
+        pointcloud = source.pointcloud;
+    }
+
     // Move the head
     face.boundingBox.Center.x = position.x;
     face.boundingBox.Center.y = position.y;
