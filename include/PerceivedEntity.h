@@ -48,6 +48,7 @@ public:
         BoundingBox = entity.BoundingBox;
         aliases = entity.aliases;
         lastUpdateTime = entity.lastUpdateTime;
+        pointcloud = entity.pointcloud;
     }
     PerceivedEntity(const PerceivedEntity& entity) :
             PerceivedEntity(static_cast<sara_msgs::Entity>(entity)) {

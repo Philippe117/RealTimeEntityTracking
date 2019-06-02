@@ -153,6 +153,7 @@ add_executable(
         include/PeopleLegInput.h
         include/PerceivedEntity.h
         include/SimulatedInput.h
+        include/PointCloudInput.h
         src/BoundingBoxesInput.cpp
         src/CvOutput.cpp
         src/TopicOutput.cpp
@@ -162,6 +163,7 @@ add_executable(
         src/PerceivedEntity.cpp
         src/RvizOutput.cpp
         src/SimulatedInput.cpp
+        src/PointCloudInput.cpp
         src/wm_entity_tracker_node.cpp)
 
 
