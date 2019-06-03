@@ -20,6 +20,7 @@ class EntityTracker {
     float mDecayRate{0.0025};
     float mMaximumDifference{50.f};
     float mPublicationTreashold{0.5};
+    float mCouplingThreashold{0.1};
 
     // Check all unlikely entities and delete them.
     void deleteDeads();
@@ -55,6 +56,10 @@ public:
     void setMaximumDifference(float value) { mMaximumDifference = value; };
 
     float decayRate() { return mDecayRate; };
+
+    float couplingThreashold() { return mCouplingThreashold; }
+
+    void setCouplingThreashold(float value) { mCouplingThreashold = value; }
 
     void setDecayRate(float value) { mDecayRate = value; };
 
