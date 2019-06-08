@@ -18,6 +18,7 @@ class PerceivedEntity : public sara_msgs::Entity {
     static float mXYWeight;
     static float mZWeight;
     static float mProbabilityWeight;
+    std::string mUnknownName{"unknown"};
     std::vector<std::string> mAssociatedFaceIDs;
     std::vector<std::string> mAssociatedLegsIDs;
 
@@ -62,6 +63,7 @@ public:
     float compareWith(const PerceivedEntity &en) const;
 
     // Merge an PerceivedEntity onto this one
+    void mergeOnto(PerceivedEntity &source);
     void mergeOnto(PerceivedEntity &source, KalmanParams params);
 
     // Update the status of the Entity
