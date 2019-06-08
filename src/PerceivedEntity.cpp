@@ -19,13 +19,13 @@ PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name) :
     setIdentity(mKF.measurementMatrix);
 
     // Initialise the transition matrix
-    float F{0.99f};
+    float F{0.98f};
     mKF.transitionMatrix = (cv::Mat_<float>(6, 6) << 1, 0, 0, 1, 0, 0, \
                                                     0, 1, 0, 0, 1, 0, \
                                                     0, 0, 1, 0, 0, 1, \
                                                     0, 0, 0, F, 0, 0, \
                                                     0, 0, 0, 0, F, 0, \
-                                                    0, 0, 0, 0, 0, F);
+                                                    0, 0, 0, 0, 0, F*F*F);
 
     // Set the Entitie property
     // TODO do all properties
