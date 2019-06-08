@@ -42,7 +42,7 @@ void PeopleFaceInput::peopleFaceCallback(sara_msgs::Faces faceArray) {
             if (entity.checkFaceID(en.face.id)) {
                 // If a match is found, we force the entity ID.
                 en.ID = entity.ID;
-                entity.position = en.position;
+                if (entity.lastUpdateTime + ros::Duration(1) > ros::Time::now()) entity.position = en.position;
                 break;
             }
         }

@@ -68,7 +68,8 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
                 en.probability > 0 ? probabilityWeight() / en.probability
                                    : 100000;  // TODO Utiliser un paramêtre de weight
 
-        if (name.compare(en.name) != 0) difference += 100000;
+        if (name.compare(mUnknownName) != 0 && en.name.compare(mUnknownName) != 0
+		    && name.compare(en.name) != 0) difference += 100000;
     }
 
     return distance + difference;
@@ -122,6 +123,10 @@ void PerceivedEntity::mergeOnto(PerceivedEntity &source) {
     face.boundingBox.Center.y = position.y;
     if (face.id.empty()) face.boundingBox.Center.z = position.z;
 
+    // Associate a new name if needed
+    if (name.compare(mUnknownName) == 0){
+        name = source.name;
+    }
 
     lastUpdateTime = ros::Time::now();
 
