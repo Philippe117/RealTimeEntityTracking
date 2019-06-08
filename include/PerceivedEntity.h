@@ -62,6 +62,7 @@ public:
     float compareWith(const PerceivedEntity &en) const;
 
     // Merge an PerceivedEntity onto this one
+    void mergeOnto(PerceivedEntity &source);
     void mergeOnto(PerceivedEntity &source, KalmanParams params);
 
     // Update the status of the Entity
