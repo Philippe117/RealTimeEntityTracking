@@ -68,7 +68,8 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
                 en.probability > 0 ? probabilityWeight() / en.probability
                                    : 100000;  // TODO Utiliser un paramêtre de weight
 
-        if (name.compare(en.name) != 0) difference += 100000;
+        if (name.compare(mUnknownName) != 0 && en.name.compare(mUnknownName) != 0
+		    && name.compare(en.name) != 0) difference += 100000;
     }
 
     return distance + difference;
@@ -76,6 +77,7 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
 }
 
 void PerceivedEntity::mergeOnto(PerceivedEntity &source, KalmanParams params) {
+
 
     // Update the filter.
     mKF.predict();
@@ -88,12 +90,18 @@ void PerceivedEntity::mergeOnto(PerceivedEntity &source, KalmanParams params) {
     measurement(2) = float(source.position.z);
     // TODO éssayer avec d'autres propriétées ex: hauteur, couleur, etc.
 
+    mergeOnto(source);
+
     // Apply the input parameters and do the kalman correction
     setIdentity(mKF.processNoiseCov, cv::Scalar::all(params.processNoiseCov));
     setIdentity(mKF.measurementNoiseCov, cv::Scalar::all(params.measurementNoiseCov));
     //setIdentity(mKF.errorCovPre, cv::Scalar::all(params.errorCovPre));
     setIdentity(mKF.errorCovPost, cv::Scalar::all(params.errorCovPost));
     mKF.correct(measurement);
+
+}
+
+void PerceivedEntity::mergeOnto(PerceivedEntity &source) {
 
     // Add the face if needed
     if (source.associatedFaceIDs().size()){
@@ -115,11 +123,15 @@ void PerceivedEntity::mergeOnto(PerceivedEntity &source, KalmanParams params) {
     face.boundingBox.Center.y = position.y;
     if (face.id.empty()) face.boundingBox.Center.z = position.z;
 
+    // Associate a new name if needed
+    if (name.compare(mUnknownName) == 0){
+        name = source.name;
+    }
 
     lastUpdateTime = ros::Time::now();
 
     if (probability < source.probability)
-        probability += (source.probability - probability) * 0.1; // TODO ajouter un taux paramétrable
+        probability += (source.probability - probability) * 0.5; // TODO ajouter un taux paramétrable
 }
 
 void PerceivedEntity::update(const ros::Duration deltaTime) {

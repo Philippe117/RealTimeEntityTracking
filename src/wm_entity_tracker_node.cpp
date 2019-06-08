@@ -69,6 +69,7 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
 
     tracker->setPublicationTreashold(config.publication_threshold);
     tracker->setMaximumDifference(config.maximum_difference);
+    tracker->setCouplingThreashold(config.coupling_threashold);
     PerceivedEntity::setXYWeight(config.weights_XY);
     PerceivedEntity::setZWeight(config.weights_Z);
     PerceivedEntity::setProbabilityWeight(config.weights_probability);
@@ -76,6 +77,8 @@ void callback(wm_entity_tracker::wm_entity_trackerConfig &config, uint32_t level
     cout << "=== Eeconfiguration ===\n"\
          << "tracker->XY_weight=" << PerceivedEntity::xYWeight() << "\n"\
          << "tracker->Y_weight=" << PerceivedEntity::zWeight() << "\n"\
+         << "tracker->weights_probability=" << PerceivedEntity::probabilityWeight() << "\n"\
+         << "tracker->coupling_threashold=" << tracker->couplingThreashold() << "\n"\
          << "boundingBoxesInput->processNoiseCov=" << boundingBoxesInput->kalmanParams().processNoiseCov << "\n"\
          << "boundingBoxesInput->processNoiseCov=" << boundingBoxesInput->kalmanParams().processNoiseCov << "\n"\
          << "boundingBoxesInput->measurementNoiseCov=" << boundingBoxesInput->kalmanParams().measurementNoiseCov << "\n"\

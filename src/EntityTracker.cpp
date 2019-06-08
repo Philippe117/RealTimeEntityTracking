@@ -20,6 +20,22 @@ void EntityTracker::update(ros::Duration deltaTime) {
         entity.probability -= decayRate();
     }
 
+    // merge entities togeter if too similar
+    for (auto &entity1 : mEntities) {
+        for (auto &entity2 : mEntities) {
+            if (entity1.ID != entity2.ID && entity1.compareWith(entity2) < mCouplingThreashold){
+                if (entity1.ID > entity2.ID){
+                    entity2.mergeOnto(entity1);
+                    entity1.probability = -1;
+                } else {
+                    entity1.mergeOnto(entity2);
+                    entity2.probability = -1;
+                }
+            }
+        }
+    }
+
+
     // Delete all old entities.
     deleteDeads();
 
@@ -127,7 +143,7 @@ void EntityTracker::addEntity(PerceivedEntity &newEntity) {
     // Initialise the ID if needed.
     if (newEntity.ID == 0) newEntity.ID = mNextID++;
 
-    newEntity.probability *= 0.1;  // TODO ajouter paramètre
+    newEntity.probability *= 0.5;  // TODO ajouter paramètre
     mEntities.push_back(newEntity);
     return;
 }
