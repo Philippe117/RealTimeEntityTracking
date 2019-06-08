@@ -9,6 +9,7 @@ using namespace cv;
 float PerceivedEntity::mXYWeight = 1.0;
 float PerceivedEntity::mZWeight = 1.0;
 float PerceivedEntity::mProbabilityWeight = 1.0;
+float PerceivedEntity::mSizeWeight = 1.0;
 
 
 PerceivedEntity::PerceivedEntity(float x, float y, float z, std::string name) :
@@ -72,6 +73,21 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
 		    && name.compare(en.name) != 0) difference += 100000;
         if ((name.compare(mUnknownName) == 0 | en.name.compare(mUnknownName))
             && (name.compare("person") == 0 | en.name.compare("person"))) difference += 100000;
+
+
+        double sx1{BoundingBox.Width*BoundingBox.Width};
+        double sy1{BoundingBox.Height*BoundingBox.Height};
+        double sz1{BoundingBox.Depth*BoundingBox.Depth};
+        double size1{sqrt(sx1+sy1+sz1)};
+
+        double sx2{en.BoundingBox.Width*en.BoundingBox.Width};
+        double sy2{en.BoundingBox.Height*en.BoundingBox.Height};
+        double sz2{en.BoundingBox.Depth*en.BoundingBox.Depth};
+        double size2{sqrt(sx2+sy2+sz2)};
+
+        if (size1 != 0 && size2 != 0){
+            difference += abs(size1-size2)*mSizeWeight;
+        }
     }
 
     return distance + difference;
