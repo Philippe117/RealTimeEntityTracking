@@ -70,6 +70,8 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
 
         if (name.compare(mUnknownName) != 0 && en.name.compare(mUnknownName) != 0
 		    && name.compare(en.name) != 0) difference += 100000;
+        if ((name.compare(mUnknownName) == 0 | en.name.compare(mUnknownName))
+            && (name.compare("person") == 0 | en.name.compare("person"))) difference += 100000;
     }
 
     return distance + difference;
