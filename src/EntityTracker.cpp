@@ -22,14 +22,16 @@ void EntityTracker::update(ros::Duration deltaTime) {
 
     // merge entities togeter if too similar
     for (auto &entity1 : mEntities) {
-        for (auto &entity2 : mEntities) {
-            if (entity1.ID != entity2.ID && entity1.compareWith(entity2) < mCouplingThreashold){
-                if (entity1.ID > entity2.ID){
-                    entity2.mergeOnto(entity1);
-                    entity1.probability = -1;
-                } else {
-                    entity1.mergeOnto(entity2);
-                    entity2.probability = -1;
+        if (entity1.probability > 0){
+            for (auto &entity2 : mEntities) {
+                if (entity1.ID != entity2.ID && entity1.compareWith(entity2) < mCouplingThreashold){
+                    if (entity1.ID > entity2.ID){
+                        entity2.mergeOnto(entity1);
+                        entity1.probability = -1;
+                    } else {
+                        entity1.mergeOnto(entity2);
+                        entity2.probability = -1;
+                    }
                 }
             }
         }

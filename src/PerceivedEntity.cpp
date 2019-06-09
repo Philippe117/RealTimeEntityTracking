@@ -3,6 +3,7 @@
 //
 
 #include "PerceivedEntity.h"
+#include <iostream>
 
 using namespace cv;
 
@@ -67,12 +68,12 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
                 probability > 0 ? probabilityWeight() / probability : 100000;  // TODO Utiliser un paramêtre de weight
         difference +=
                 en.probability > 0 ? probabilityWeight() / en.probability
-                                   : 100000;  // TODO Utiliser un paramêtre de weight
+                                   : 110000;  // TODO Utiliser un paramêtre de weight
 
         if (name.compare(mUnknownName) != 0 && en.name.compare(mUnknownName) != 0
-		    && name.compare(en.name) != 0) difference += 100000;
-        if ((name.compare(mUnknownName) == 0 | en.name.compare(mUnknownName))
-            && (name.compare("person") == 0 | en.name.compare("person"))) difference += 100000;
+		    && name.compare(en.name) != 0) difference += 130000;
+        if ((name.compare(mUnknownName) == 0 | en.name.compare(mUnknownName) == 0)
+            && (name.compare("person") == 0 | en.name.compare("person") == 0)) difference += 140000;
 
 
         double sx1{BoundingBox.Width*BoundingBox.Width};
@@ -89,7 +90,8 @@ float PerceivedEntity::compareWith(const PerceivedEntity &en) const {
             difference += abs(size1-size2)*mSizeWeight;
         }
     }
-
+//    std::cout << name << " vs " << name.compare("person") << "\n";
+//    std::cout << distance + difference << "\n";
     return distance + difference;
 
 }
