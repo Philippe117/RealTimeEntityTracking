@@ -35,6 +35,7 @@
   <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
   <depend>roscpp</depend>
   <depend>sara_msgs</depend>
+  <depend>people_msgs</depend>
   <depend>message_runtime</depend>
   <!--<build_depend>sara_msgs</build_depend>-->
   <!--   Note that this is equivalent to the following: -->
